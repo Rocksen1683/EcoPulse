@@ -93,10 +93,31 @@ class IdeaEvaluator:
             writer = csv.writer(file, fieldnames)
             writer.writerow(fieldnames)
             writer.writerows(self.baseline_model_data)
-
-
+    
+    def run_evaluator(self):
+        cyclic_geese = '''    
+  /$$$$$$                      /$$ /$$                  /$$$$$$                                         
+ /$$__  $$                    | $$|__/                 /$$__  $$                                        
+| $$  \__/ /$$   /$$  /$$$$$$$| $$ /$$  /$$$$$$$      | $$  \__/  /$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$ 
+| $$      | $$  | $$ /$$_____/| $$| $$ /$$_____/      | $$ /$$$$ /$$__  $$ /$$__  $$ /$$_____/ /$$__  $$
+| $$      | $$  | $$| $$      | $$| $$| $$            | $$|_  $$| $$$$$$$$| $$$$$$$$|  $$$$$$ | $$$$$$$$
+| $$    $$| $$  | $$| $$      | $$| $$| $$            | $$  \ $$| $$_____/| $$_____/ \____  $$| $$_____/
+|  $$$$$$/|  $$$$$$$|  $$$$$$$| $$| $$|  $$$$$$$      |  $$$$$$/|  $$$$$$$|  $$$$$$$ /$$$$$$$/|  $$$$$$$
+ \______/  \____  $$ \_______/|__/|__/ \_______/       \______/  \_______/ \_______/|_______/  \_______/
+           /$$  | $$                                                                                    
+          |  $$$$$$/                                                                                    
+           \______/ '''
+        print(cyclic_geese)
+        print("Welcome to the Cyclic Geese Idea Evaluator!!")
+        print("Our evaluator provides a baseline analysis of all of the ideas but also provides user-based analysis :)")
+        print("Running Baseline Model.")
+        # self.baseline_model()
+        print("The results of the baseline can be found in \'data/baseline_model.csv\'")
+        print("Baseline results are sorted based on which idea we think are better")
+        
 if __name__ == "__main__":
     evaluator = IdeaEvaluator("./data/AI_EarthHack_Dataset_Small.csv")
-    evaluator.baseline_model()
+    evaluator.run_evaluator()
+    # evaluator.baseline_model()
 
         

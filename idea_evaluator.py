@@ -135,6 +135,8 @@ class IdeaEvaluator:
             writer = csv.writer(file, fieldnames)
             writer.writerow(fieldnames)
             writer.writerows(self.baseline_model_data)
+
+    
     
     def run_evaluator(self):
         cyclic_geese = '''    

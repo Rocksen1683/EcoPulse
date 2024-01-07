@@ -104,6 +104,7 @@ class IdeaEvaluator:
         for x in range(1, len(metrics) + 2): # offset by 2 because it starts at 1 and need extra token for combined score
             result.append(tokens[x].split()[0])
 
+        result.append(tokens[-1])
         return result
 
     def baseline_model(self):
@@ -165,12 +166,11 @@ class IdeaEvaluator:
         print("Our evaluator provides a baseline analysis of all of the ideas but also provides user-based analysis :)")
         print("Running Baseline Model...")
         self.baseline_model()
-        print(self.baseline_model_data)
-        # print("The results of the baseline can be found in \'data/baseline_model.csv\'")
-        # print("Baseline results are sorted based on which idea we think are better and also have a 'Category' field that will help you better understand the data.")
-        # print("Now that we have a baseline model, let's do some visualization eh ;)")
-        # self.populate_categories()
-        # self.bar_visualization()
+        print("The results of the baseline can be found in \'data/baseline_model.csv\'")
+        print("Baseline results are sorted based on which idea we think are better and also have a 'Category' field that will help you better understand the data.")
+        print("Now that we have a baseline model, let's do some visualization eh ;)")
+        self.populate_categories()
+        self.bar_visualization()
 
         
 if __name__ == "__main__":

@@ -130,7 +130,6 @@ class IdeaEvaluator:
                 self.categories[category] += 1 
             else:
                 self.categories[category] = 1
-        print(self.categories)
 
     def filter_categories(self, model, category):
         filter = []
@@ -139,6 +138,7 @@ class IdeaEvaluator:
                 filter.append(row)
         fields = ['Index', 'Problem', 'Solution']
         fields.extend(self.new_metrics)
+        fields.extend(['Combined Score', 'Category'])
         with open(f"./data/filtered_{category}_results.csv","w" ,newline = '', encoding = 'latin-1') as file:
             writer = csv.writer(file, fields)
             writer.writerow(fields)
@@ -154,8 +154,8 @@ class IdeaEvaluator:
 
     def user_model(self):
         while True:
-            print('''Tell us about yourself, explain what type of investments you are looking for\n
-                e.g. Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years\n''')
+            print("Tell us about yourself, explain what type of investments you are looking for")
+            print('''e.g. Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years\n''')
             intro = input()
         
             chat_completion = self.client.chat.completions.create(
@@ -175,8 +175,8 @@ class IdeaEvaluator:
 
         values = list(map(lambda x: int(x), weights.split(', ')))
 
-        print('''Tell us more about the type of ideas you want to invest in\n
-            i.e. are you interested in a certain sector, businesss model etc. \n''')
+        print("Tell us more about the type of ideas you want to invest in?")
+        print("i.e. are you interested in a certain sector (Education), businesss model etc. \n")
         goals = input()
 
         chat_completion = self.client.chat.completions.create(
@@ -190,6 +190,7 @@ class IdeaEvaluator:
         )
         tokens = chat_completion.choices[0].message.content.split(",")
 
+        print("\nCreating metrics that are specific to you...\n")
         for x in range(0, 9, 2):
             self.new_metrics.append(tokens[x])
         
@@ -230,6 +231,8 @@ class IdeaEvaluator:
     def export_user_model(self):
         fields = ['Index', 'Problem', 'Solution']
         fields.extend(self.new_metrics)
+        fields.extend(['Combined Score', 'Category'])
+
         with open('./data/user_results.csv','w', newline = '', encoding = 'latin-1') as file:
             writer = csv.writer(file, fields)
             writer.writerow(fields)
@@ -250,37 +253,39 @@ class IdeaEvaluator:
            \______/ '''
         print(cyclic_geese)
         time.sleep(2)
-        print("Welcome to the Cyclic Geese Idea Evaluator!!")
-        print("Our evaluator provides a baseline analysis of all of the ideas but also provides user-based analysis :)")
+        print("\nWelcome to the EcoPulse Idea Validator Tool!!")
+        print("Our evaluator provides a baseline analysis of all of the ideas but also provides user-based analysis :)\n")
         time.sleep(4)
-        print("Running Baseline Model...")
+        print("Running Baseline Model...\n")
         self.baseline_model()
         time.sleep(4)
+        print("Baseline Model run was succesful :)")
         print("The results of the baseline can be found in \'data/baseline_results.csv\'")
-        print("Baseline results are sorted based on which idea we think are better and also have a 'Category' field that will help you better understand the data.")
-        time.sleep(4)
-        print("Now that we have a baseline model, let's do some visualization eh ;)")
+        print("Baseline results are sorted based on which idea we think are good\n")
+        print("Here's a visualization of the categories of ideas in the dataset ;)\n")
+        time.sleep(3)
         self.populate_categories()
         self.bar_visualization()
-        time.sleep(6)
+        time.sleep(4)
         print("Let's get into our user-based model")
-        print("Running user-based model...")
         self.user_weights = self.user_model()
         self.evaluateAdditionalMetrics()
         time.sleep(4)
         weighted_scores = self.calculateScore()
         self.export_user_model()
+        
         print("The results of the user model can be found in \'data/user_results.csv\'")
-        print("The user model generates metrics based on the user's profile and evaluates ideas based on them")
-        time.sleep(4)
+        print("The user model generates metrics based on the user's profile and evaluates ideas based on them\n")
+        time.sleep(5)
         print("Now that we have the user model, would you like to filter the data based on a category?")
         print("Here are the categories: ")
         for category in self.categories.keys():
             print(category)
+        print("\n")
         print("Enter y/n")
         filter = input()
         if filter == "y":
-            print("Enter a category from the above list.")
+            print("\nEnter a category from the above list.")
             category = input()
             if category not in self.categories:
                 print("Invalid category.")
@@ -288,10 +293,10 @@ class IdeaEvaluator:
                 self.filter_categories(self.user_model_data, category)
                 print(f"You can find the filtered dataset in \'data/filtered_{category}_.csv\'")
                 time.sleep(2)
-                print("Thank you for using the Cyclic Geese  idea evaluator!!!")
+                print("\nThank you for using the EcoPulse idea evaluator!!!")
 
         else:
-            print("Thank you for using the Cyclic Geese  idea evaluator!!!")
+            print("\nThank you for using the EcoPulse idea evaluator!!!")
         
         honk_honk = '''  _                 _      _                 _    
                         | |               | |    | |               | |   
@@ -304,10 +309,6 @@ class IdeaEvaluator:
 
 
         print(honk_honk)
-        
-if __name__ == "__main__":
-    evaluator = IdeaEvaluator("./data/AI_EarthHack_Dataset_Small.csv")
-    evaluator.run_evaluator()
-    # evaluator.baseline_model()
+    
 
         

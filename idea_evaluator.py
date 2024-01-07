@@ -9,6 +9,7 @@ import os
 import csv 
 from openai import OpenAI
 import re
+import random
 import plotly.graph_objects as go 
 
 class IdeaEvaluator:
@@ -24,6 +25,8 @@ class IdeaEvaluator:
         #baseline model data 
         self.baseline_model_data = []
         self.categories = {}
+        self.fieldnames=['Index', 'Problem', 'Solution', 'Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation', 'Combined Score', 'Category']
+
 
     def populate_rows(self, rows):
         with open(self.dataset_path, encoding = 'latin-1') as file:
@@ -46,15 +49,28 @@ class IdeaEvaluator:
             print(f"Error loading OPENAI_KEY: {e}")
         return None
     
-    def generate_baseline_results(self, idx, problem, solution):
-      messages = [
+    def generate_results(self, idx, problem, solution, metrics):
+        score = int(100 / len(metrics))
+
+        metricList = ''
+        for metric in metrics:
+            metricList = metricList + metric + ", "
+        metricList = metricList[:-2]
+
+        example = ''
+        for metric in metrics:
+            metricList = metricList + metric + " : " + str(random.randint(1, score)) + " "
+        metricList = metricList[:-1]
+
+        messages = [
         {
             "role": "system",
             "content": '''You are an AI-powered decision-support tool used to evaluate innovative circular economy business opportunities.
               You are given a problem statement and a solution. Here are a few important metrics you need to evaluate these solutions on, 
-              Metrics : Market Potential, Scalability, Feasibility, Maturity Stage, Technological Innovation. Follow these steps for the output :
-              Step 1 : For each metric, you provide a score for the solution between 0 and 20. The higher the score, the better the solution.
+              Metrics : ''' + metricList + '''. Follow these steps for the output :
+              Step 1 : For each metric, you provide a score for the solution between 0 and ''' + str(score) + '''. The higher the score, the better the solution.
               Step 2 : You must create a combined score, by aggregating (sum of) all the individual scores from the metrics above. This score should be between 0 and 100.
+              Step 3 : You are going to categorize the given problem into a category relevant to strengthening the circular economy. Only mention the category name, and not the description.
               Ensure each criteria is given equal weightage, and is scored out of 20. Ensure that the output is in one line always. Ensure that the output is exactly the same format 
               as the example, with the same number of spaces and punctuation. You do not have to show your reasoning for the scores.''',
         },
@@ -65,7 +81,7 @@ class IdeaEvaluator:
         },
         {
             "role": "assistant",
-            "content": "Market Potential: 15 Scalability: 12 Feasibility: 19 Maturity Stage: 14 Technological Innovation: 11 Combined Score: 71",
+            "content": "Market Potential: 15 Scalability: 12 Feasibility: 19 Maturity Stage: 14 Technological Innovation: 11 Combined Score: 71 Category: Construction",
         },
         {
             "role": "user",
@@ -73,47 +89,53 @@ class IdeaEvaluator:
         }
       ]
       
-      res = self.client.chat.completions.create(
-          model = "gpt-3.5-turbo",
-          messages = messages
-      )
-      msg = res.choices[0].message.content
-      print(idx, msg)
-      tokens = msg.split(' ')
-      # print(tokens)
-      result = [idx, problem, solution, tokens[2], tokens[4], tokens[6], tokens[9], tokens[12], tokens[15]]
-      return result
-    
-    def generate_categories(self):
-        #generating categories for baseline model 
-        data = ""
-        for row in self.rows:
-            data += row[0]
-            data += "\nProblem: "
-            data += row[1]
-            # data += "\nSolution: "
-            # data += row[2]
-            data += "\n"
-        # print(data)
-
-        messages = [{"role": "system",
-            "content": '''You are going to categorize the following problems into categories relevant to strengthening the circular economy.
-                        I want you to only tell me the category name and the number of problems that fit in that category.
-                        Output Format - Category name: number of problems in that category. Ensure that the output is in one line always.
-                        Ensure that each category is separated by a comma.'''
-            },]
         res = self.client.chat.completions.create(
             model = "gpt-3.5-turbo",
             messages = messages
-        )
-        message = res.choices[0].message.content
-        tokens = re.split(r'[:,]', message)
-        for i in range(0, len(tokens)-1,2):
-            self.categories[tokens[i]] = tokens[i+1]
+      )
+        msg = res.choices[0].message.content
+      
+        print(idx, msg)
+        tokens = msg.split(': ')
+        print(tokens)
+
+        result = [idx, problem, solution]
+      
+        for x in range(1, len(metrics) + 2): # offset by 2 because it starts at 1 and need extra token for combined score
+            result.append(tokens[x].split()[0])
+
+        return result
+
+    def baseline_model(self):
+        for row in self.rows:
+            baseline_row = self.generate_results(row[0], row[1], row[2], ['Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation'])
+            self.baseline_model_data.append(baseline_row)
+        self.baseline_model_data.sort(key=lambda x: x[::-1], reverse=True)
+
+        with open('./data/baseline_results.csv','w', newline = '', encoding = 'latin-1') as file:
+            writer = csv.writer(file, self.fieldnames)
+            writer.writerow(self.fieldnames)
+            writer.writerows(self.baseline_model_data)
+
+    def populate_categories(self):
+        for row in self.baseline_model_data:
+            category = row[-1]
+            if category in self.categories:
+                self.categories[category] += 1 
+            else:
+                self.categories[category] = 1
         print(self.categories)
-        print(self.categories.keys())
-        print(self.categories.values())
-        print(res.choices[0].message.content)
+
+    def filter_categories(self, model, category):
+        filter = []
+        for row in model:
+            if category == row[-1]:
+                filter.append(row)
+
+        with open(f"./data/filtered_{category}_results.csv","w" ,newline = '', encoding = 'latin-1') as file:
+            writer = csv.writer(file, self.fieldnames)
+            writer.writerow(self.fieldnames)
+            writer.writerows(filter)
 
     def bar_visualization(self):
         keys = list(self.categories.keys())
@@ -122,19 +144,6 @@ class IdeaEvaluator:
         fig = go.Figure(data=[go.Bar(x=keys, y=values)])
         fig.update_layout(title_text='Category Distribution', xaxis_title='Categories', yaxis_title='Frequency')
         fig.show()
-
-    def baseline_model(self):
-        fieldnames=['Index', 'Problem', 'Solution', 'Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation', 'Combined Score']
-
-        for row in self.rows:
-            baseline_row = self.generate_baseline_results(row[0], row[1], row[2])
-            self.baseline_model_data.append(baseline_row)
-        self.baseline_model_data.sort(key=lambda x: x[::-1], reverse=True)
-
-        with open('./data/baseline_results.csv','w', newline = '', encoding = 'latin-1') as file:
-            writer = csv.writer(file, fieldnames)
-            writer.writerow(fieldnames)
-            writer.writerows(self.baseline_model_data)
 
     
     
@@ -155,14 +164,13 @@ class IdeaEvaluator:
         print("Welcome to the Cyclic Geese Idea Evaluator!!")
         print("Our evaluator provides a baseline analysis of all of the ideas but also provides user-based analysis :)")
         print("Running Baseline Model...")
-        # self.baseline_model()
-        print("The results of the baseline can be found in \'data/baseline_model.csv\'")
-        print("Baseline results are sorted based on which idea we think are better")
-        print("Now that we have a baseline model, let's categorize all the ideas :))")
-        print("Running categorization...")
-        self.generate_categories()
-        print("Let's do some visualization eh")
-        self.bar_visualization()
+        self.baseline_model()
+        print(self.baseline_model_data)
+        # print("The results of the baseline can be found in \'data/baseline_model.csv\'")
+        # print("Baseline results are sorted based on which idea we think are better and also have a 'Category' field that will help you better understand the data.")
+        # print("Now that we have a baseline model, let's do some visualization eh ;)")
+        # self.populate_categories()
+        # self.bar_visualization()
 
         
 if __name__ == "__main__":

@@ -8,6 +8,8 @@ import csv
 import os
 import csv 
 from openai import OpenAI
+import re
+import plotly.graph_objects as go 
 
 class IdeaEvaluator:
     def __init__(self, dataset_path):
@@ -21,6 +23,7 @@ class IdeaEvaluator:
 
         #baseline model data 
         self.baseline_model_data = []
+        self.categories = {}
 
     def populate_rows(self, rows):
         with open(self.dataset_path, encoding = 'latin-1') as file:
@@ -80,6 +83,45 @@ class IdeaEvaluator:
       # print(tokens)
       result = [idx, problem, solution, tokens[2], tokens[4], tokens[6], tokens[9], tokens[12], tokens[15]]
       return result
+    
+    def generate_categories(self):
+        #generating categories for baseline model 
+        data = ""
+        for row in self.rows:
+            data += row[0]
+            data += "\nProblem: "
+            data += row[1]
+            # data += "\nSolution: "
+            # data += row[2]
+            data += "\n"
+        # print(data)
+
+        messages = [{"role": "system",
+            "content": '''You are going to categorize the following problems into categories relevant to strengthening the circular economy.
+                        I want you to only tell me the category name and the number of problems that fit in that category.
+                        Output Format - Category name: number of problems in that category. Ensure that the output is in one line always.
+                        Ensure that each category is separated by a comma.'''
+            },]
+        res = self.client.chat.completions.create(
+            model = "gpt-3.5-turbo",
+            messages = messages
+        )
+        message = res.choices[0].message.content
+        tokens = re.split(r'[:,]', message)
+        for i in range(0, len(tokens)-1,2):
+            self.categories[tokens[i]] = tokens[i+1]
+        print(self.categories)
+        print(self.categories.keys())
+        print(self.categories.values())
+        print(res.choices[0].message.content)
+
+    def bar_visualization(self):
+        keys = list(self.categories.keys())
+        values = list(self.categories.values())
+
+        fig = go.Figure(data=[go.Bar(x=keys, y=values)])
+        fig.update_layout(title_text='Category Distribution', xaxis_title='Categories', yaxis_title='Frequency')
+        fig.show()
 
     def baseline_model(self):
         fieldnames=['Index', 'Problem', 'Solution', 'Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation', 'Combined Score']
@@ -110,10 +152,16 @@ class IdeaEvaluator:
         print(cyclic_geese)
         print("Welcome to the Cyclic Geese Idea Evaluator!!")
         print("Our evaluator provides a baseline analysis of all of the ideas but also provides user-based analysis :)")
-        print("Running Baseline Model.")
+        print("Running Baseline Model...")
         # self.baseline_model()
         print("The results of the baseline can be found in \'data/baseline_model.csv\'")
         print("Baseline results are sorted based on which idea we think are better")
+        print("Now that we have a baseline model, let's categorize all the ideas :))")
+        print("Running categorization...")
+        self.generate_categories()
+        print("Let's do some visualization eh")
+        self.bar_visualization()
+
         
 if __name__ == "__main__":
     evaluator = IdeaEvaluator("./data/AI_EarthHack_Dataset_Small.csv")

@@ -109,15 +109,15 @@ class IdeaEvaluator:
         message = res.choices[0].message.content
         tokens = re.split(r'[:,]', message)
         for i in range(0, len(tokens)-1,2):
-            self.category[tokens[i]] = tokens[i+1]
-        print(self.category)
-        print(self.category.keys())
-        print(self.category.values())
+            self.categories[tokens[i]] = tokens[i+1]
+        print(self.categories)
+        print(self.categories.keys())
+        print(self.categories.values())
         print(res.choices[0].message.content)
 
     def bar_visualization(self):
-        keys = list(self.category.keys())
-        values = list(self.category.values())
+        keys = list(self.categories.keys())
+        values = list(self.categories.values())
 
         fig = go.Figure(data=[go.Bar(x=keys, y=values)])
         fig.update_layout(title_text='Category Distribution', xaxis_title='Categories', yaxis_title='Frequency')

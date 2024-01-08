@@ -1,10 +1,10 @@
 # AIEarthHack - EcoPulse
 This is a submission for the Harvard AI EarthHack Challenge 2024 by team `Cyclic Geese` :)
 
-`EcoPulse` is a gen-AI powered Idea Validator tool that will help you find ideas that can boost the circular economy. It provides the user with two models - a baseline model that evaluates ideas based on fixed metrics and a user-based model that evaluates ideas based on the user's profile and needs.
+`EcoPulse` is a gen-AI powered Idea Validator tool that will help you find ideas that can boost the circular economy. It provides the user with a baseline model that evaluates ideas based on fixed metrics and refines the model based on the user's profile and needs.
 
 ## Requirements 
-You would need a valid OpenAI API key to run EcoPulse.\
+You would need a valid `OpenAI` API key to run EcoPulse.\
 You would also need the following Python libraries:
 - `openai` 
 - `plotly`

@@ -2,8 +2,6 @@
 This file aims to act as an Idea Evaluator for ideas that would boost the Circular Economy 
 """
 
-import pandas as pd
-import numpy as np
 import csv
 import os
 import csv 

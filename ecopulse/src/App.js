@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import WebSocket from 'websocket';
 import { Dialog } from '@headlessui/react'
 import {
   ArrowPathIcon,
@@ -18,6 +19,8 @@ function classNames(...classes) {
 export default function Example() {
   const [apiKey, setApiKey] = useState('');
   const [csvFile, setCsvFile] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [receivedData, setReceivedData] = useState('');
 
   const handleEnter = () => {
     const formData = new FormData();
@@ -34,6 +37,29 @@ export default function Example() {
     const file = e.target.files[0];
     setCsvFile(file);
   };
+
+  useEffect(() => {
+    const socket = "localhost:5001/";
+    setSocket(socket);
+
+    socket.onopen = () => {
+      console.log('WebSocket connection opened');
+    };
+
+    socket.onmessage = (event) => {
+      setReceivedData(event.data);
+      // Here, you can process the received data and update your dashboard
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    return () => {
+      // Close the WebSocket connection when the component unmounts
+      socket.close();
+    };
+  }, []);
 
   return (
     <div className="bg-gradient-to-r from-lime to-teal">
@@ -98,6 +124,18 @@ export default function Example() {
         Enter
       </button>
     </div>
+    {/* Display received data in a text area */}
+    <div className="mt-4">
+        <label htmlFor="receivedData" className="block text-sm font-medium leading-6 text-gray-900">
+          Received Data
+        </label>
+        <textarea
+          id="receivedData"
+          className="mt-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          readOnly
+          value={receivedData}
+        />
+      </div>
       </main>
 
       {/* Footer */}

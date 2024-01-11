@@ -25,6 +25,7 @@ export default function Example() {
     formData.append('fileName', csvFile.name);
     formData.append('apiKey', apiKey);
     setIsBaselineLoading(true);
+    try{
     const res = await fetch('http://146.190.254.2:5000/api/predict', {
       mode: 'cors',
       method: 'POST',
@@ -36,7 +37,10 @@ export default function Example() {
     setFID(res.fid)
     setChartHTML(res.barhtml)
     setCategories(res.categories)
-  };
+  } catch (e) {
+    console.log(e)
+  }
+}
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setCsvFile(file);

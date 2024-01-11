@@ -16,12 +16,23 @@ function classNames(...classes) {
 }
 
 export default function Example() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [apiKey, setApiKey] = useState('');
+  const [csvFile, setCsvFile] = useState(null);
 
   const handleEnter = () => {
-    // Here, you can implement the logic to send the `apiKey` to your API
-    console.log('Sending API key:', apiKey);
+    const formData = new FormData();
+    formData.append('file', csvFile);
+    formData.append('fileName', csvFile.name);
+    formData.append('apiKey', apiKey);
+    fetch('http://localhost:5000/api/predict', {
+      method: 'POST',
+      cache: 'no-cache',
+      body: formData,
+    })
+  };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setCsvFile(file);
   };
 
   return (
@@ -54,16 +65,24 @@ export default function Example() {
    
         </div>
         <div className='px-6'>
-          <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-            Enter your API key
+          <label className="block text-sm font-medium leading-6 text-gray-900">
+            Enter your OpenAI API key
           </label>
           <div className="mt-2">
             <input
-              type="email"
-              name="email"
-              id="email"
+              onChange={(e) => setApiKey(e.target.value)}
               className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="you@example.com"
+            />
+          </div>
+          <div className="mt-4">
+            <label htmlFor="csvFile" className="block text-sm font-medium leading-6 text-gray-900">
+              Upload CSV File
+            </label>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileChange}
+              className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <button

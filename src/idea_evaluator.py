@@ -13,12 +13,12 @@ import plotly.graph_objects as go
 import time
 
 class IdeaEvaluator:
-    def __init__(self, dataset_path):
+    def __init__(self, dataset_path, api_key):
         dotenv.load_dotenv()
         self.dataset_path = dataset_path
-        self.OpenAI_key = os.getenv('OPENAI_API_KEY')
+        self.OpenAI_key = api_key
         print("OpenAI Key: ", self.OpenAI_key)
-        self.client = OpenAI()
+        self.client = OpenAI(api_key=self.OpenAI_key)
         #populating dataset 
         self.rows = []
         self.populate_rows(self.rows)

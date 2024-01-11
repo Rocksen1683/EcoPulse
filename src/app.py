@@ -1,7 +1,10 @@
-from flask import Flask, flash, request, redirect, url_for
-from werkzeug.utils import secure_filename
+from flask import Flask, flash, request, redirect, url_for, jsonify
+from flask_cors import CORS, cross_origin
+import uuid
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 from idea_evaluator import *
 
@@ -14,6 +17,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/api/predict', methods=['POST'])
+@cross_origin()
 def predict():
     if 'file' not in request.files:
             flash('No file part')
@@ -25,14 +29,13 @@ def predict():
         flash('No selected file')
         return redirect(request.url)
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
+        filename = str(uuid.uuid4()) + ".csv"
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return redirect(url_for('uploaded_file', filename=filename))
-    return 'done'
-    # evaluator = IdeaEvaluator("./data/AI_EarthHack_Dataset_Small.csv")
-    # evaluator.run_evaluator()
-    # test = "test"
-    # return {jsonify({'test': test})}
+        print("File saved @ ", os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # return redirect(url_for('uploaded_file', filename=file.filename))
+    evaluator = IdeaEvaluator(f"./data/{filename}", request.form['apiKey'])
+    evaluator.run_evaluator()
+    return jsonify({})
 
 if __name__ == '__main__':
     app.run(debug=True)

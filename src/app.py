@@ -38,7 +38,9 @@ def predict():
         outfname = evaluator.baseline_model()
     except AuthenticationError:
         return (jsonify({'error': 'Invalid API Key'}), 400)
-    return jsonify({'filename': outfname})
+    evaluator.populate_categories()
+    barhtml = evaluator.bar_visualization()
+    return jsonify({'filename': outfname, 'barhtml': barhtml})
 
 @app.route('/api/user-predict', methods=['POST'])
 def user_predict():

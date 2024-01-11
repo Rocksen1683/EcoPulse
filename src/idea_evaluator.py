@@ -10,7 +10,8 @@ from openai import OpenAI
 import re
 import uuid
 import random
-import plotly.graph_objects as go 
+import plotly.graph_objects as go
+import plotly.io as io 
 import time
 
 class IdeaEvaluator:
@@ -157,8 +158,7 @@ class IdeaEvaluator:
 
         fig = go.Figure(data=[go.Bar(x=keys, y=values)])
         fig.update_layout(title_text='Category Distribution', xaxis_title='Categories', yaxis_title='Frequency')
-        fig.show()
-
+        return io.to_html(fig)
     def user_model(self):
         while True:
             print("Tell us about yourself, explain what type of investments you are looking for")

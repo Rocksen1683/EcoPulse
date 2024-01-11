@@ -8,6 +8,7 @@ export default function Example() {
   const [apiKey, setApiKey] = useState('');
   const [csvFile, setCsvFile] = useState(null);
   const [serverFile, setServerFile] = useState(null);
+  const [chartHTML, setChartHTML] = useState(null);
   const [isBaselineLoading, setIsBaselineLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [userSector, setUserSector] = useState(null);
@@ -26,6 +27,7 @@ export default function Example() {
     }).then((res) => res.json());
     setIsBaselineLoading(false);
     setServerFile(res.filename)
+    setChartHTML(res.barhtml)
   };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -164,6 +166,15 @@ export default function Example() {
             </div>
           )
           }
+
+          {chartHTML && serverFile && (<>
+            <p class='my-3'>
+              Baseline results are sorted based on which idea we think are good
+              <br />
+              Here's a visualization of the categories of ideas in the dataset
+            </p>
+            <iframe className='w-full h-[410px]' title='big bar' srcDoc={chartHTML}></iframe>
+          </>)}
 
           {apiData ? (
             <div>

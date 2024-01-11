@@ -16,14 +16,19 @@ function classNames(...classes) {
 }
 
 export default function Example() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [apiKey, setApiKey] = useState('');
   const [csvFile, setCsvFile] = useState(null);
 
   const handleEnter = () => {
-    // Here, you can implement the logic to send the `apiKey` to your API
-    console.log('Sending API key:', apiKey);
-    console.log('Uploading CSV file:', csvFile);
+    const formData = new FormData();
+    formData.append('file', csvFile);
+    formData.append('fileName', csvFile.name);
+    formData.append('apiKey', apiKey);
+    fetch('http://localhost:5000/api/predict', {
+      method: 'POST',
+      cache: 'no-cache',
+      body: formData,
+    })
   };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -111,3 +116,4 @@ export default function Example() {
     </div>
   )
 }
+

@@ -31,10 +31,10 @@ export default function Example() {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-gradient-to-r from-lime to-teal">
 
       <main className="isolate">
-        {/* Hero section */}
+        {/* Title */}
         <div className="relative pt-14">
           <div
             className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -49,18 +49,20 @@ export default function Example() {
             />
           </div>
   
-              <div className="mx-auto max-w-2xl text-center">
-                <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-                  EcoPulse
+              <div className="mx-auto mx-38 max-w-2xl text-left mt-10">
+                <h1 className="text-6xl font-bold tracking-tight text-white sm:text-9xl">
+                  Eco<br/>Pulse
                 </h1>
-                <p className="mt-6 text-lg leading-8 text-gray-600">
-                  By: Cyclic Geese
+                <p className="mt-10 text-2xl leading-8 text-dark-green">
+                  By Cyclic Geese
                 </p>
               </div>
    
         </div>
-        <div>
-      <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+
+      {/* inputs */}
+      <div className='mx-40 mt-30'>
+      <label className="block text-sm font-medium leading-6 text-gray-900">
         Enter your API key
       </label>
       <div className="mt-2">
@@ -69,7 +71,7 @@ export default function Example() {
           name="email"
           id="email"
           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          placeholder="you@example.com"
+          placeholder="sk-abc123456789012345678901234567890"
         />
       </div>
       <div className="mt-4">
@@ -94,15 +96,15 @@ export default function Example() {
       </main>
 
       {/* Footer */}
-      <div className="mx-auto mt-32 max-w-7xl px-6 lg:px-8">
+      <div className="mx-40 mt-20 max-w-7xl px-6 lg:px-8">
         <footer
           aria-labelledby="footer-heading"
-          className="relative border-t border-gray-900/10 py-24 sm:mt-56 sm:py-32"
+          className="relative border-t border-dark-green py-24 sm:mt-32 sm:py-32"
         >
           <h2 id="footer-heading" className="sr-only">
             Footer
           </h2>
-          <h2 className="text-2xl font-bold leading-10 tracking-tight text-gray-900">Thank you to AI EarthHack for inspiring and supporting this project</h2>
+          <h2 className="text-2xl font-bold leading-10 tracking-tight text-dark-green">Thank you to AI EarthHack for inspiring and supporting this project</h2>
 
         </footer>
       </div>

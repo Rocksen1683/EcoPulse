@@ -1,8 +1,10 @@
 from flask import Flask, flash, request, redirect, url_for, jsonify
 from flask_cors import CORS, cross_origin
 from openai import AuthenticationError
+import asyncio
+import websockets
 import uuid
-
+import os
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -40,5 +42,51 @@ def predict():
         return (jsonify({'error': 'Invalid API Key'}), 400)
     return jsonify({'hello': 'world'})
 
+async def send_evaluation():
+    uri = "ws://localhost:5000/ws/"  # Adjust the URL based on your server's address
+    async with websockets.connect(uri) as websocket:
+        await websocket.send("Evaluate")
+        response = await websocket.recv()
+        print(response)
+
+@app.route('/ws/')
+@cross_origin()
+async def websocket_handler( ws):
+    print("WebSocket connection established")
+    
+    try:
+        message = await ws.recv()
+        if message == "Evaluate":
+            # Perform evaluation or any other processing based on filename and api_key
+            await ws.send("Evaluation completed successfully")
+    except websockets.exceptions.ConnectionClosedError:
+        print("WebSocket connection closed")
+
+
+async def send_evaluation():
+    uri = "ws://localhost:5000/ws/"  # Adjust the URL based on your server's address
+    async with websockets.connect(uri) as websocket:
+        await websocket.send("Evaluate")
+        response = await websocket.recv()
+        print(response)
+
+@app.route('/ws/')
+async def websocket_handler( ws):
+    print("WebSocket connection established")
+    
+    try:
+        message = await ws.recv()
+        if message == "Evaluate":
+            # Perform evaluation or any other processing based on filename and api_key
+            await ws.send("Evaluation completed successfully")
+    except websockets.exceptions.ConnectionClosedError:
+        print("WebSocket connection closed")
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+    start_server = websockets.serve(websocket_handler, "localhost", 5000)
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
+    print("Server started")
+    send_evaluation()

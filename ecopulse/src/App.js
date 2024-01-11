@@ -79,9 +79,10 @@ export default function Example() {
 
   return (
     <div className="bg-gradient-to-r from-lime to-teal">
+
       <main className="isolate">
         {/* Title */}
-        <div className="mx-40 relative pt-14">
+        <div className="relative pt-14">
           <div
             className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
             aria-hidden="true"
@@ -95,7 +96,7 @@ export default function Example() {
             />
           </div>
 
-      <div className="flex">
+      <div className="flex mx-auto mx-38 max-w-2xl text-left mt-10">
         <div>
           <h1 className="text-6xl font-bold tracking-tight text-white sm:text-9xl">
             Eco<br/>Pulse
@@ -113,7 +114,7 @@ export default function Example() {
       {/* inputs */}
    
         </div>
-        <div className='px-6'>
+        <div className='px-6 mx-40 mt-30'>
           <label className="block text-md mt-20 leading-6 text-dark-green">
             Enter your OpenAI API key
           </label>
@@ -202,15 +203,15 @@ export default function Example() {
       </main>
 
       {/* Footer */}
-      <div className="mx-auto mt-32 max-w-7xl px-6 lg:px-8">
+      <div className="mx-40 mt-20 max-w-7xl px-6 lg:px-8">
         <footer
           aria-labelledby="footer-heading"
-          className="relative border-t border-dark-green py-24 sm:mt-32 sm:py-38"
+          className="relative border-t border-dark-green py-24 sm:mt-32 sm:py-32"
         >
           <h2 id="footer-heading" className="sr-only">
             Footer
           </h2>
-          <h2 className="text-2xl font-bold leading-10 tracking-tight text-gray-900">Thank you to AI EarthHack for inspiring and supporting this project</h2>
+          <h2 className="text-2xl font-bold leading-10 tracking-tight text-dark-green">Thank you to AI EarthHack for inspiring and supporting this project</h2>
 
         </footer>
       </div>

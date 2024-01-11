@@ -1,4 +1,4 @@
-from flask import Flask, flash, request, redirect, url_for, jsonify
+from flask import Flask, current_app, flash, request, redirect, send_file, send_from_directory, url_for, jsonify
 from flask_cors import CORS, cross_origin
 from openai import AuthenticationError
 import uuid
@@ -29,16 +29,23 @@ def predict():
         flash('No selected file')
         return redirect(request.url)
     if file and allowed_file(file.filename):
-        filename = str(uuid.uuid4()) + ".csv"
+        fid = str(uuid.uuid4())
+        filename = fid + ".csv"
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         print("File saved @ ", os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # return redirect(url_for('uploaded_file', filename=file.filename))
+    evaluator = IdeaEvaluator(fid, request.form['apiKey'])
     try:
-        evaluator = IdeaEvaluator(f"./data/{filename}", request.form['apiKey'])
-        evaluator.run_evaluator()
+        outfname = evaluator.baseline_model()
     except AuthenticationError:
         return (jsonify({'error': 'Invalid API Key'}), 400)
-    return jsonify({'hello': 'world'})
+    return jsonify({'filename': outfname})
+
+@app.route('/api/download/<path:filename>', methods=['GET'])
+def download(filename):
+    uploads = os.path.join(current_app.root_path, 'outs')
+    print(uploads)
+    print(filename)
+    return send_from_directory(uploads, path=filename, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)

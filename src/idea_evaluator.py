@@ -8,14 +8,16 @@ import dotenv
 import csv 
 from openai import OpenAI
 import re
+import uuid
 import random
 import plotly.graph_objects as go 
 import time
 
 class IdeaEvaluator:
-    def __init__(self, dataset_path, api_key):
+    def __init__(self, file_uuid, api_key):
         dotenv.load_dotenv()
-        self.dataset_path = dataset_path
+        self.dataset_path = f"./data/{file_uuid}.csv"
+        self.file_uuid = file_uuid
         self.OpenAI_key = api_key
         print("OpenAI Key: ", self.OpenAI_key)
         self.client = OpenAI(api_key=self.OpenAI_key)
@@ -113,16 +115,20 @@ class IdeaEvaluator:
         return result
 
     def baseline_model(self):
+        out_filename = f"./src/outs/{self.file_uuid}_baseline_results.csv"
+
         for row in self.rows:
             baseline_row = self.generate_results(row[0], row[1], row[2], ['Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation'])
             self.baseline_model_data.append(baseline_row)
         self.baseline_model_data.sort(key=lambda x: x[-2], reverse=True)
 
 
-        with open('./data/baseline_results.csv','w', newline = '', encoding = 'latin-1') as file:
+        with open(out_filename,'w', newline = '', encoding = 'latin-1') as file:
             writer = csv.writer(file, self.fieldnames)
             writer.writerow(self.fieldnames)
             writer.writerows(self.baseline_model_data)
+        
+        return f"{self.file_uuid}_baseline_results.csv"
 
     def populate_categories(self):
         for row in self.baseline_model_data:

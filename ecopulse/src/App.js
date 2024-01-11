@@ -18,18 +18,23 @@ function classNames(...classes) {
 export default function Example() {
   const [apiKey, setApiKey] = useState('');
   const [csvFile, setCsvFile] = useState(null);
+  const [serverFile, setServerFile] = useState(null);
+  const [isBaselineLoading, setIsBaselineLoading] = useState(false);
 
-  const handleEnter = () => {
+  const handleEnter = async () => {
     const formData = new FormData();
     formData.append('file', csvFile);
     formData.append('fileName', csvFile.name);
     formData.append('apiKey', apiKey);
-    fetch('http://localhost:5000/api/predict', {
+    setIsBaselineLoading(true);
+    const res = await fetch('http://localhost:5000/api/predict', {
       mode: 'cors',
       method: 'POST',
       cache: 'no-cache',
       body: formData,
-    })
+    }).then((res) => res.json());
+    setIsBaselineLoading(false);
+    setServerFile(res.filename)
   };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -87,11 +92,34 @@ export default function Example() {
             />
           </div>
           <button
-            className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
             onClick={handleEnter}
+            disabled={isBaselineLoading}
           >
-            Enter
+            {isBaselineLoading ? 'Loading...' : 'Enter'}
           </button>
+
+          {isBaselineLoading && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-500">
+                Baseline model loading... please do not refresh the page.
+              </p>
+            </div>
+          )}
+          {!isBaselineLoading && serverFile && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-500">
+                Baseline model loaded! Download your file{' '}
+                <a
+                  href={`http://localhost:5000/api/download/${serverFile}`}
+                  className="text-indigo-600 hover:text-indigo-500"
+                >
+                  here
+                </a>
+              </p>
+            </div>
+          )
+          }
         </div>
       </main>
 

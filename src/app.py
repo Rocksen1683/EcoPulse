@@ -40,6 +40,15 @@ def predict():
         return (jsonify({'error': 'Invalid API Key'}), 400)
     return jsonify({'filename': outfname})
 
+@app.route('/api/user-predict', methods=['POST'])
+def user_predict():
+    try:
+        evaluator = IdeaEvaluator(f"./data/{request.args.get('file')}", request.args.get('apiKey'))
+        evaluator.run_evaluator()
+    except AuthenticationError:
+        return (jsonify({'error': 'Invalid API Key'}), 400)
+    return jsonify({'hello': 'world'})
+
 @app.route('/api/download/<path:filename>', methods=['GET'])
 def download(filename):
     uploads = os.path.join(current_app.root_path, 'outs')

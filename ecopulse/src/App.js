@@ -9,6 +9,8 @@ export default function Example() {
   const [csvFile, setCsvFile] = useState(null);
   const [serverFile, setServerFile] = useState(null);
   const [isBaselineLoading, setIsBaselineLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  const [userSector, setUserSector] = useState(null);
 
   const handleEnter = async () => {
     const formData = new FormData();
@@ -29,6 +31,40 @@ export default function Example() {
     const file = e.target.files[0];
     setCsvFile(file);
   };
+
+  const handleUser = () => {
+    fetch('http://localhost:5000/api/user-predict', {
+      method: 'POST',
+      cache: 'no-cache',
+      body: {
+        userInfo: user,
+        userSector: userSector
+      },
+    })
+  }
+  const [apiData, setApiData] = useState(null);
+
+  useEffect(() => {
+    // Simulating an API call with setTimeout
+    const fetchData = async () => {
+      try {
+        // Perform your actual API request here
+        // Example: const response = await fetch('your-api-endpoint');
+        // const data = await response.json();
+        // setApiData(data);
+
+        // Simulating API response for demonstration
+        setTimeout(() => {
+          setApiData({ message: 'API response received!' });
+        }, 3000);
+      } catch (error) {
+        console.error('Error fetching API data:', error);
+      }
+    };
+
+    fetchData();
+  }, []); // The empty dependency array ensures that useEffect runs only once on component mount
+
 
   //upon receiving a response from the server, create a new textbox for the user to input their information
     const handleResponse = (response) => {
@@ -127,6 +163,41 @@ export default function Example() {
             </div>
           )
           }
+
+          {apiData ? (
+            <div>
+              <label className="block mx-40 text-md mt-20 leading-6 text-dark-green">
+                <>
+                  <p>Tell us about yourself, explain what type of investments you are looking for<br /></p>
+                  <p className='text-grey-400'> (e.g. Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years)</p>
+                </>
+              </label>
+              <div className="mx-40 mt-2">
+                <input
+                  onChange={(e) => setUser(e.target.value)}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
+                />
+              </div>
+              <label className="block mx-40 text-md mt-20 leading-6 text-dark-green">
+              <>
+                <p>Tell us more about the type of ideas you want to invest in?<br /></p>
+                <p className='text-grey-400'> (e.g. i.e. are you interested in a certain sector (Education), businesss model etc.)</p>
+              </>
+              </label>
+              <div className="mx-40 mt-2">
+                <input
+                  onChange={(e) => setUserSector(e.target.value)}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
+                />
+              </div>
+              <button
+                className="mt-2 mx-40 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                onClick={handleUser}
+              >
+                Enter
+              </button>
+            </div>
+            ) : null}
         </div>
       </main>
 

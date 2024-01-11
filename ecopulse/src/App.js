@@ -49,14 +49,19 @@ export default function Example() {
             />
           </div>
   
-          <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-6xl font-bold tracking-tight text-white sm:text-9xl">
-              Eco<br/>Pulse
-            </h1>
-            <p className="mt-10 text-2xl leading-8 text-dark-green">
-              By Cyclic Geese
-            </p>
-          </div>
+    <div className="flex">
+      <h1 className="text-6xl font-bold tracking-tight text-white sm:text-9xl">
+        Eco<br/>Pulse
+      </h1>
+      <img className="mx-32" src={leaf} alt="Example" /> 
+    </div>
+    <p className="mt-10 text-2xl leading-8 text-dark-green">
+      By Cyclic Geese
+    </p>
+    {/* <img src={leaf} alt="Example" /> */}
+  
+
+      {/* inputs */}
    
         </div>
         <div className='px-6'>

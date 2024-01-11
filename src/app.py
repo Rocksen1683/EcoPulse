@@ -1,17 +1,38 @@
-import csv
-import sqlite3
-from flask import Flask, request, jsonify
+from flask import Flask, flash, request, redirect, url_for
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
 from idea_evaluator import *
 
+UPLOAD_FOLDER = './data'
+ALLOWED_EXTENSIONS = {'csv'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route('/api/predict', methods=['POST'])
 def predict():
-    evaluator = IdeaEvaluator("./data/AI_EarthHack_Dataset_Small.csv")
-    evaluator.run_evaluator()
-    test = "test"
-    return {jsonify({'test': test})}
+    if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+    file = request.files['file']
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(request.url)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return redirect(url_for('uploaded_file', filename=filename))
+    return 'done'
+    # evaluator = IdeaEvaluator("./data/AI_EarthHack_Dataset_Small.csv")
+    # evaluator.run_evaluator()
+    # test = "test"
+    # return {jsonify({'test': test})}
 
 if __name__ == '__main__':
     app.run(debug=True)

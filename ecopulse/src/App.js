@@ -103,7 +103,7 @@ export default function Example() {
           <h1 className="text-6xl font-bold tracking-tight text-white sm:text-9xl">
             Eco<br/>Pulse
           </h1>
-          <p className="mt-10 text-2xl leading-8 text-dark-green">
+          <p className="mt-10 text-2xl leading-8 text-darker-green">
             By Cyclic Geese
           </p>
         </div>
@@ -117,7 +117,7 @@ export default function Example() {
    
         </div>
         <div className='px-6 mx-40 mt-30'>
-          <label className="block text-md mt-20 leading-6 text-dark-green">
+          <label className="block text-md mt-20 leading-6 text-darker-green">
             Enter your OpenAI API key
           </label>
           <div className="mt-2">
@@ -128,14 +128,14 @@ export default function Example() {
             />
           </div>
           <div className="mt-4">
-            <label htmlFor="csvFile" className="block text-md mt-20 leading-6 text-dark-green">
+            <label htmlFor="csvFile" className="block text-md mt-20 leading-6 text-darker-green">
               Upload CSV File
             </label>
             <input
               type="file"
               accept=".csv"
               onChange={handleFileChange}
-              className="block w-full rounded-md border-0 bg-dark-green px-3 py-1.5 text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 bg-dark-green px-3 py-1.5 text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-100 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <button
@@ -179,28 +179,28 @@ export default function Example() {
 
           {apiData ? (
             <div>
-              <label className="block text-md mt-20 leading-6 text-dark-green">
+              <label className="block text-md mt-20 leading-6 text-darker-green">
                 <>
                   <p>Tell us about yourself, explain what type of investments you are looking for<br /></p>
-                  <p className='text-grey-400'> (e.g. Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years)</p>
+                  <p className='text-dark-green'> (e.g. Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years)</p>
                 </>
               </label>
               <div className=" mt-2">
                 <input
                   onChange={(e) => setUser(e.target.value)}
-                  className="block w-full rounded-md border-0 bg-dark-green py-1.5 text-gray-200 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
+                  className="px-3 block w-full rounded-md border-0 bg-dark-green py-1.5 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
                 />
               </div>
-              <label className="block text-md mt-20 leading-6 text-dark-green">
+              <label className="block text-md mt-20 leading-6 text-darker-green">
               <>
                 <p>Tell us more about the type of ideas you want to invest in?<br /></p>
-                <p className='text-grey-400'> (e.g. i.e. are you interested in a certain sector (Education), businesss model etc.)</p>
+                <p className='text-dark-green'> (e.g. i.e. are you interested in a certain sector (Education), businesss model etc.)</p>
               </>
               </label>
               <div className="mt-2">
                 <input
                   onChange={(e) => setUserSector(e.target.value)}
-                  className="block w-full rounded-md border-0 bg-dark-green py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
+                  className="px-3 block w-full rounded-md border-0 bg-dark-green py-1.5 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
                 />
               </div>
               <button

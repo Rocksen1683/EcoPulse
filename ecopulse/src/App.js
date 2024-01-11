@@ -98,7 +98,7 @@ export default function Example() {
             />
           </div>
 
-      <div className="flex mx-auto mx-38 max-w-2xl text-left mt-10">
+      <div className="flex mx-44 max-w-2xl text-left mt-10">
         <div>
           <h1 className="text-6xl font-bold tracking-tight text-white sm:text-9xl">
             Eco<br/>Pulse
@@ -123,7 +123,8 @@ export default function Example() {
           <div className="mt-2">
             <input
               onChange={(e) => setApiKey(e.target.value)}
-              className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 px-3 bg-dark-green py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder='sk-abc123456789012345678901234567890'
             />
           </div>
           <div className="mt-4">
@@ -134,7 +135,7 @@ export default function Example() {
               type="file"
               accept=".csv"
               onChange={handleFileChange}
-              className="block w-full rounded-md border-0 px-3 py-1.5 text-dark-green shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 bg-dark-green px-3 py-1.5 text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <button
@@ -158,7 +159,7 @@ export default function Example() {
                 Baseline model loaded! Download your file{' '}
                 <a
                   href={`http://localhost:5000/api/download/${serverFile}`}
-                  className="text-indigo-600 hover:text-indigo-500"
+                  className="text-indigo-600 hover:text-purple-800"
                 >
                   here
                 </a>
@@ -178,32 +179,32 @@ export default function Example() {
 
           {apiData ? (
             <div>
-              <label className="block mx-40 text-md mt-20 leading-6 text-dark-green">
+              <label className="block text-md mt-20 leading-6 text-dark-green">
                 <>
                   <p>Tell us about yourself, explain what type of investments you are looking for<br /></p>
                   <p className='text-grey-400'> (e.g. Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years)</p>
                 </>
               </label>
-              <div className="mx-40 mt-2">
+              <div className=" mt-2">
                 <input
                   onChange={(e) => setUser(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 bg-dark-green py-1.5 text-gray-200 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
                 />
               </div>
-              <label className="block mx-40 text-md mt-20 leading-6 text-dark-green">
+              <label className="block text-md mt-20 leading-6 text-dark-green">
               <>
                 <p>Tell us more about the type of ideas you want to invest in?<br /></p>
                 <p className='text-grey-400'> (e.g. i.e. are you interested in a certain sector (Education), businesss model etc.)</p>
               </>
               </label>
-              <div className="mx-40 mt-2">
+              <div className="mt-2">
                 <input
                   onChange={(e) => setUserSector(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 bg-dark-green py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
                 />
               </div>
               <button
-                className="mt-2 mx-40 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={handleUser}
               >
                 Enter

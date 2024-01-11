@@ -1,16 +1,5 @@
-import { useState } from 'react'
-import { Dialog } from '@headlessui/react'
-import {
-  ArrowPathIcon,
-  Bars3Icon,
-  CloudArrowUpIcon,
-  FingerPrintIcon,
-  LockClosedIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline'
-import { CheckIcon } from '@heroicons/react/20/solid'
-
-
+import React, { useState, useEffect } from 'react';
+import leaf from './leaf.png';
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -45,8 +34,8 @@ export default function Example() {
     <div className="bg-white">
 
       <main className="isolate">
-        {/* Hero section */}
-        <div className="relative pt-14">
+        {/* Title */}
+        <div className="mx-40 relative pt-14">
           <div
             className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
             aria-hidden="true"
@@ -61,17 +50,17 @@ export default function Example() {
           </div>
   
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              EcoPulse
+            <h1 className="text-6xl font-bold tracking-tight text-white sm:text-9xl">
+              Eco<br/>Pulse
             </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              By: Cyclic Geese
+            <p className="mt-10 text-2xl leading-8 text-dark-green">
+              By Cyclic Geese
             </p>
           </div>
    
         </div>
         <div className='px-6'>
-          <label className="block text-sm font-medium leading-6 text-gray-900">
+          <label className="block text-md mt-20 leading-6 text-dark-green">
             Enter your OpenAI API key
           </label>
           <div className="mt-2">
@@ -81,14 +70,14 @@ export default function Example() {
             />
           </div>
           <div className="mt-4">
-            <label htmlFor="csvFile" className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="csvFile" className="block text-md mt-20 leading-6 text-dark-green">
               Upload CSV File
             </label>
             <input
               type="file"
               accept=".csv"
               onChange={handleFileChange}
-              className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 px-3 py-1.5 text-dark-green shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
           <button
@@ -127,7 +116,7 @@ export default function Example() {
       <div className="mx-auto mt-32 max-w-7xl px-6 lg:px-8">
         <footer
           aria-labelledby="footer-heading"
-          className="relative border-t border-gray-900/10 py-24 sm:mt-56 sm:py-32"
+          className="relative border-t border-dark-green py-24 sm:mt-32 sm:py-38"
         >
           <h2 id="footer-heading" className="sr-only">
             Footer
@@ -139,4 +128,3 @@ export default function Example() {
     </div>
   )
 }
-

@@ -26,11 +26,14 @@ export default function Example() {
     formData.append('apiKey', apiKey);
     setIsBaselineLoading(true);
     try{
-    const res = await fetch('http://146.190.254.2:5000/api/predict', {
+    const res = await fetch('http://127.0.0.1:5000/api/predict', {
       mode: 'cors',
       method: 'POST',
       cache: 'no-cache',
       body: formData,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
     }).then((res) => res.json());
     setIsBaselineLoading(false);
     setBaseServerFile(res.filename)
@@ -58,7 +61,7 @@ export default function Example() {
     Object.keys(bodyobj).forEach(key => formData.append(key, bodyobj[key]));
     
     setIsUserModelLoading(true);
-    const res = await fetch('http://146.190.254.2:5000/api/user-predict', {
+    const res = await fetch('http://127.0.0.1:5000/api/user-predict', {
       method: 'POST',
       cache: 'no-cache',
       contentType: 'application/json',
@@ -148,7 +151,7 @@ export default function Example() {
               <p className="text-sm text-gray-500">
                 Baseline model loaded! Download your file{' '}
                 <a
-                  href={`http://146.190.254.2:5000/api/download/${baseServerFile}`}
+                  href={`http://127.0.0.1:5000/api/download/${baseServerFile}`}
                   className="text-indigo-600 hover:text-purple-800"
                 >
                   here
@@ -222,7 +225,7 @@ export default function Example() {
               <p className="text-sm text-gray-500">
                 User model loaded! Download your file{' '}
                 <a
-                  href={`http://146.190.254.2:5000/api/download/${userServerFile}`}
+                  href={`http://127.0.0.1:5000/api/download/${userServerFile}`}
                   className="text-indigo-600 hover:text-purple-800"
                 >
                   here
@@ -238,7 +241,7 @@ export default function Example() {
                 <p className="text-sm text-gray-500">
                   Filtered model data loaded! Download your file{' '}
                   <a
-                    href={`http://146.190.254.2:5000/api/download/${filteredServerFile}`}
+                    href={`http://127.0.0.1:5000/api/download/${filteredServerFile}`}
                     className="text-indigo-600 hover:text-purple-800"
                   >
                     here

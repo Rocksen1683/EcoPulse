@@ -38,18 +38,24 @@ def predict():
         outfname = evaluator.baseline_model()
     except AuthenticationError:
         return (jsonify({'error': 'Invalid API Key'}), 400)
-    evaluator.populate_categories()
+    categories = evaluator.populate_categories()
     barhtml = evaluator.bar_visualization()
-    return jsonify({'filename': outfname, 'barhtml': barhtml})
+
+    return jsonify({'filename': outfname, 'barhtml': barhtml, 'fid': fid, 'categories': categories})
 
 @app.route('/api/user-predict', methods=['POST'])
 def user_predict():
     try:
-        evaluator = IdeaEvaluator(f"./data/{request.args.get('file')}", request.args.get('apiKey'))
-        evaluator.run_evaluator()
+        evaluator = IdeaEvaluator(request.form['fid'], request.form['apiKey'])
+        evaluator.user_model(request.form['userInfo'], request.form['userSector'])
+        evaluator.evaluateAdditionalMetrics()
+        evaluator.calculateScore()
+        filteroutfname = evaluator.filter_categories(evaluator.user_model_data,request.form['category'])
+        useroutfname = evaluator.export_user_model()
     except AuthenticationError:
         return (jsonify({'error': 'Invalid API Key'}), 400)
-    return jsonify({'hello': 'world'})
+    return jsonify({'filename': useroutfname, 'filteroutfname': filteroutfname})
+    
 
 @app.route('/api/download/<path:filename>', methods=['GET'])
 def download(filename):

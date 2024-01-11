@@ -138,19 +138,21 @@ class IdeaEvaluator:
                 self.categories[category] += 1 
             else:
                 self.categories[category] = 1
+        return self.categories
 
     def filter_categories(self, model, category):
         filter = []
         for row in model:
-            if category == row[-1]:
+            if category.casefold() == row[-1].casefold():
                 filter.append(row)
         fields = ['Index', 'Problem', 'Solution']
         fields.extend(self.new_metrics)
         fields.extend(['Combined Score', 'Category'])
-        with open(f"./data/filtered_{category}_results.csv","w" ,newline = '', encoding = 'latin-1') as file:
+        with open(f"./src/outs/filtered_{self.file_uuid}_{category}_results.csv","w" ,newline = '', encoding = 'latin-1') as file:
             writer = csv.writer(file, fields)
             writer.writerow(fields)
             writer.writerows(filter)
+        return f"filtered_{self.file_uuid}_{category}_results.csv"
 
     def bar_visualization(self):
         keys = list(self.categories.keys())
@@ -159,32 +161,27 @@ class IdeaEvaluator:
         fig = go.Figure(data=[go.Bar(x=keys, y=values)])
         fig.update_layout(title_text='Category Distribution', xaxis_title='Categories', yaxis_title='Frequency')
         return io.to_html(fig)
-    def user_model(self):
-        while True:
-            print("Tell us about yourself, explain what type of investments you are looking for")
-            print('''e.g. Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years\n''')
-            intro = input()
-        
-            chat_completion = self.client.chat.completions.create(
-                messages=[
-                    { "role": "system", "content": "You are a decision-support tool, given an investor profile determine weightings ideas as an integer from 1 to 100 based on how relevant each of the following metrics is: Market Potential, Scalibility, Feasibility, Maturity Stage, Technological Innovation. " },
-                    { "role": "user", "content": "I am a Venture Capital Analyst looking for start-ups, I am looking for safe investments and I would need my investment to pay off in 3-5 years."},
-                    { "role": "assistant", "content": "23, 90, 63, 74, 9" },
-                    { "role": "user", "content": intro}
-                ],
-                model="gpt-3.5-turbo",
-            )
-            weights = chat_completion.choices[0].message.content
-            #weights = '70, 85, 50, 67, 94' 
-
-            if(weights[0].isdigit()): # check for error/other prompt response
-                break
+    def user_model(self, intro, goals):
+  
+        print("Tell us about yourself, explain what type of investments you are looking for")
+        print('''e.g. Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years\n''')
+    
+        chat_completion = self.client.chat.completions.create(
+            messages=[
+                { "role": "system", "content": "You are a decision-support tool, given an investor profile determine weightings ideas as an integer from 1 to 100 based on how relevant each of the following metrics is: Market Potential, Scalibility, Feasibility, Maturity Stage, Technological Innovation. " },
+                { "role": "user", "content": "I am a Venture Capital Analyst looking for start-ups, I am looking for safe investments and I would need my investment to pay off in 3-5 years."},
+                { "role": "assistant", "content": "23, 90, 63, 74, 9" },
+                { "role": "user", "content": intro}
+            ],
+            model="gpt-3.5-turbo",
+        )
+        weights = chat_completion.choices[0].message.content
+        #weights = '70, 85, 50, 67, 94' 
 
         values = list(map(lambda x: int(x), weights.split(', ')))
 
         print("Tell us more about the type of ideas you want to invest in?")
         print("i.e. are you interested in a certain sector (Education), businesss model etc. \n")
-        goals = input()
 
         chat_completion = self.client.chat.completions.create(
             messages=[
@@ -204,7 +201,8 @@ class IdeaEvaluator:
         for x in range(1, 10, 2):
             values.append(int(tokens[x]))
             
-        return values
+        self.user_weights = values
+        return
     
     def evaluateAdditionalMetrics(self):
         fieldnames=['Index', 'Problem', 'Solution']
@@ -236,14 +234,19 @@ class IdeaEvaluator:
         return weightedScore
     
     def export_user_model(self):
+        out_filename = f"./src/outs/{self.file_uuid}_user_results.csv"
+
         fields = ['Index', 'Problem', 'Solution']
         fields.extend(self.new_metrics)
         fields.extend(['Combined Score', 'Category'])
 
-        with open('./data/user_results.csv','w', newline = '', encoding = 'latin-1') as file:
+        with open(out_filename,'w', newline = '', encoding = 'latin-1') as file:
             writer = csv.writer(file, fields)
             writer.writerow(fields)
             writer.writerows(self.user_model_data)
+
+        return f"{self.file_uuid}_user_results.csv"
+        
 
     def run_evaluator(self):
         cyclic_geese = '''    
@@ -275,7 +278,8 @@ class IdeaEvaluator:
         self.bar_visualization()
         time.sleep(4)
         print("Let's get into our user-based model")
-        self.user_weights = self.user_model()
+        # self.user_weights = 
+        self.user_model()
         self.evaluateAdditionalMetrics()
         time.sleep(4)
         weighted_scores = self.calculateScore()

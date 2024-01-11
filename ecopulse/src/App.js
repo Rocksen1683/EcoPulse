@@ -7,11 +7,17 @@ function classNames(...classes) {
 export default function Example() {
   const [apiKey, setApiKey] = useState('');
   const [csvFile, setCsvFile] = useState(null);
-  const [serverFile, setServerFile] = useState(null);
+  const [baseServerFile, setBaseServerFile] = useState(null);
+  const [userServerFile, setUserServerFile] = useState(null);
+  const [filteredServerFile, setFilteredServerFile] = useState(null);
+  const [fid, setFID] = useState(null)
   const [chartHTML, setChartHTML] = useState(null);
   const [isBaselineLoading, setIsBaselineLoading] = useState(false);
+  const [isUserModelLoading, setIsUserModelLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [userSector, setUserSector] = useState(null);
+  const [category, setCategories] = useState(null);
+  const [filterCat, setFilterCat] = useState(null);
 
   const handleEnter = async () => {
     const formData = new FormData();
@@ -26,61 +32,41 @@ export default function Example() {
       body: formData,
     }).then((res) => res.json());
     setIsBaselineLoading(false);
-    setServerFile(res.filename)
+    setBaseServerFile(res.filename)
+    setFID(res.fid)
     setChartHTML(res.barhtml)
+    setCategories(res.categories)
   };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setCsvFile(file);
   };
 
-  const handleUser = () => {
-    fetch('http://localhost:5000/api/user-predict', {
+  const handleUser = async () => {
+    const bodyobj = {
+      fid: fid,
+      apiKey: apiKey,
+      userInfo: user,
+      userSector: userSector,
+      category: filterCat,
+    }
+    const formData = new FormData();
+    Object.keys(bodyobj).forEach(key => formData.append(key, bodyobj[key]));
+    
+    setIsUserModelLoading(true);
+    const res = await fetch('http://localhost:5000/api/user-predict', {
       method: 'POST',
       cache: 'no-cache',
-      body: {
-        userInfo: user,
-        userSector: userSector
-      },
-    })
-  }
-  const [apiData, setApiData] = useState(null);
-
-  useEffect(() => {
-    // Simulating an API call with setTimeout
-    const fetchData = async () => {
-      try {
-        // Perform your actual API request here
-        // Example: const response = await fetch('your-api-endpoint');
-        // const data = await response.json();
-        // setApiData(data);
-
-        // Simulating API response for demonstration
-        setTimeout(() => {
-          setApiData({ message: 'API response received!' });
-        }, 3000);
-      } catch (error) {
-        console.error('Error fetching API data:', error);
-      }
-    };
-
-    fetchData();
-  }, []); // The empty dependency array ensures that useEffect runs only once on component mount
-
-
-  //upon receiving a response from the server, create a new textbox for the user to input their information
-    const handleResponse = (response) => {
-      const data = response.json();
-      console.log(data);
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.placeholder = 'Tell us about yourself, explain what type of investments you are looking for\ne.g. (Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years.)';
-      document.body.appendChild(input);
-    };
-    
+      contentType: 'application/json',
+      body: formData,
+    }).then((res) => res.json());
+    setUserServerFile(res.filename)
+    setFilteredServerFile(res.filteroutfname)
+    setIsUserModelLoading(false);
+  }    
 
   return (
-    <div className="bg-gradient-to-r from-lime to-teal">
+    <div className="transparent">
 
       <main className="isolate">
         {/* Title */}
@@ -153,12 +139,12 @@ export default function Example() {
               </p>
             </div>
           )}
-          {!isBaselineLoading && serverFile && (
+          {!isBaselineLoading && baseServerFile && (
             <div className="mt-4">
               <p className="text-sm text-gray-500">
                 Baseline model loaded! Download your file{' '}
                 <a
-                  href={`http://localhost:5000/api/download/${serverFile}`}
+                  href={`http://localhost:5000/api/download/${baseServerFile}`}
                   className="text-indigo-600 hover:text-purple-800"
                 >
                   here
@@ -168,8 +154,8 @@ export default function Example() {
           )
           }
 
-          {chartHTML && serverFile && (<>
-            <p class='my-3'>
+          {!isBaselineLoading && chartHTML && baseServerFile && (<>
+            <p className='my-3'>
               Baseline results are sorted based on which idea we think are good
               <br />
               Here's a visualization of the categories of ideas in the dataset
@@ -177,7 +163,7 @@ export default function Example() {
             <iframe className='w-full h-[410px]' title='big bar' srcDoc={chartHTML}></iframe>
           </>)}
 
-          {apiData ? (
+          {!isBaselineLoading && chartHTML && baseServerFile ? (
             <div>
               <label className="block text-md mt-20 leading-6 text-darker-green">
                 <>
@@ -203,14 +189,60 @@ export default function Example() {
                   className="px-3 block w-full rounded-md border-0 bg-dark-green py-1.5 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
                 />
               </div>
+              <label className="block text-md mt-20 leading-6 text-darker-green">
+              <>
+                <p><br />Now that we have the user model, you can filter your results based on a particular category. Enter a category from the following list: </p>
+                <p className='text-dark-green'>
+                  {Object.keys(category).join(', ')}
+                </p>
+              </>
+              </label>
+              <div className="mt-2">
+                <input
+                  onChange={(e) => setFilterCat(e.target.value)}
+                  className="px-3 block w-full rounded-md border-0 bg-dark-green py-1.5 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
+                />
+              </div>
               <button
-                className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
                 onClick={handleUser}
+                disabled={isUserModelLoading}
               >
-                Enter
+                {isUserModelLoading ? 'Loading...' : 'Enter'}
               </button>
             </div>
             ) : null}
+
+          {!isUserModelLoading && userServerFile && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-500">
+                User model loaded! Download your file{' '}
+                <a
+                  href={`http://localhost:5000/api/download/${userServerFile}`}
+                  className="text-indigo-600 hover:text-purple-800"
+                >
+                  here
+                </a>
+              </p>
+            </div>
+          )
+          }
+
+          {
+             filteredServerFile && (
+              <div className="mt-4">
+                <p className="text-sm text-gray-500">
+                  Filtered model data loaded! Download your file{' '}
+                  <a
+                    href={`http://localhost:5000/api/download/${filteredServerFile}`}
+                    className="text-indigo-600 hover:text-purple-800"
+                  >
+                    here
+                  </a>
+                </p>
+              </div>
+            )
+          }
         </div>
       </main>
 

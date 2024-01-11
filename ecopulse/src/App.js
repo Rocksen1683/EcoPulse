@@ -30,6 +30,17 @@ export default function Example() {
     setCsvFile(file);
   };
 
+  //upon receiving a response from the server, create a new textbox for the user to input their information
+    const handleResponse = (response) => {
+      const data = response.json();
+      console.log(data);
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Tell us about yourself, explain what type of investments you are looking for\ne.g. (Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years.)';
+      document.body.appendChild(input);
+    };
+    
+
   return (
     <div className="bg-gradient-to-r from-lime to-teal">
       <main className="isolate">

@@ -25,6 +25,7 @@ export default function Example() {
     formData.append('fileName', csvFile.name);
     formData.append('apiKey', apiKey);
     fetch('http://localhost:5000/api/predict', {
+      mode: 'cors',
       method: 'POST',
       cache: 'no-cache',
       body: formData,

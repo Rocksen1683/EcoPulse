@@ -4,6 +4,7 @@ This file aims to act as an Idea Evaluator for ideas that would boost the Circul
 
 import csv
 import os
+from dotenv import load_dotenv
 import csv 
 from openai import OpenAI
 import re
@@ -14,8 +15,8 @@ import time
 class IdeaEvaluator:
     def __init__(self, dataset_path):
         self.dataset_path = dataset_path
-        self.OpenAI_key = self.load_openai_key()
-        self.client = OpenAI(api_key=self.OpenAI_key)
+        self.OpenAI_key = "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"
+        self.client = OpenAI(api_key = self.OpenAI_key)
         #populating dataset 
         self.rows = []
         self.populate_rows(self.rows)
@@ -39,7 +40,7 @@ class IdeaEvaluator:
         
     def load_openai_key(self):
         try:
-            with open(".env", "r") as env_file:
+            with open("./src/.env", "r") as env_file:
                 lines = env_file.readlines()
                 for line in lines:
                     key, value = line.strip().split("=")

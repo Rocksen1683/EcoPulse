@@ -1,4 +1,4 @@
-from idea_evaluator import *
+from src.idea_evaluator import *
 
 """
 Run this file for the EcoPulse Idea Validator. Honk Honk :)

@@ -6,6 +6,7 @@ import uuid
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['CORS_ORIGINS'] = '*'
 
 from idea_evaluator import *
 

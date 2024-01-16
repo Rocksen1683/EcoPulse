@@ -1,11 +1,12 @@
-from flask import Flask, current_app, flash, request, redirect, send_file, send_from_directory, url_for, jsonify
+from flask import Flask, current_app, flash, request, redirect, send_file, send_from_directory, url_for, jsonify, make_response
 from flask_cors import CORS, cross_origin
 from openai import AuthenticationError
 import uuid
 
 app = Flask(__name__)
-cors = CORS(app)
+cors = CORS(app, origins="*")
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['CORS_ORIGINS'] = '*'
 
 from idea_evaluator import *
 
@@ -19,6 +20,11 @@ def allowed_file(filename):
 
 @app.route('/api/predict', methods=['POST', 'OPTIONS'])
 def predict():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers.add('Access-Control-Allow-Methods', 'POST')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        return response
     if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
@@ -65,4 +71,4 @@ def download(filename):
     return send_from_directory(uploads, path=filename, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)

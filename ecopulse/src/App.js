@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import leaf from './leaf.png';
+import { Menu, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -14,10 +16,20 @@ export default function Example() {
   const [chartHTML, setChartHTML] = useState(null);
   const [isBaselineLoading, setIsBaselineLoading] = useState(false);
   const [isUserModelLoading, setIsUserModelLoading] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(['new', 'safe', 'limited', '1-3 years']);
+  const [experience, setExperience] = useState('new');
+  const [risk, setRisk] = useState('safe');
+  const [capital, setCapital] = useState('limited');
+  const [timeframe, setTimeframe] = useState('1-3 years')
+
   const [userSector, setUserSector] = useState(null);
   const [category, setCategories] = useState(null);
   const [filterCat, setFilterCat] = useState(null);
+  const userPrompt = () => {
+    return "I am a " + experience + " investor. In terms of risk versus reward I want to prioritize investments that are "
+     + risk + ". I have " + capital + " capital to invest. I want to see a return on my investment within " + timeframe;
+  };
+  
 
   const handleEnter = async () => {
     const formData = new FormData();
@@ -53,7 +65,7 @@ export default function Example() {
     const bodyobj = {
       fid: fid,
       apiKey: apiKey,
-      userInfo: user,
+      userInfo: userPrompt(),
       userSector: userSector,
       category: filterCat,
     }
@@ -138,6 +150,442 @@ export default function Example() {
           >
             {isBaselineLoading ? 'Loading...' : 'Enter'}
           </button>
+
+          <label className="block text-md mt-10 py-10 leading-6 text-darker-green">
+                <>
+
+                  <p>Tell us about yourself, explain what type of investments you are looking for<br /></p>
+                  <div className='flex mt-5 py-4'>
+                  
+                  {/* experience*/}
+                  <p className='text-dark-green py-1'> My investment experience is </p>
+
+                  <Menu as="div" className="relative inline-block text-left px-2">
+                    <div>
+                      <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-darker-green shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        {experience}
+                        <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </Menu.Button>
+                    </div>
+
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-dark-green shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="py-1">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setExperience('new')}
+                              className={classNames(
+                                active ? 'text-white' : 'text-light-gray',
+                                'block px-4 py-2 text-sm'
+                              )}
+                            >
+                              new
+                            </p>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setExperience('intermediate')}
+                              className={classNames(
+                                active ? 'text-white' : 'text-light-gray',
+                                'block px-4 py-2 text-sm'
+                              )}
+                            >
+                              intermediate
+                            </p>
+                            )}
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setExperience('experienced')}
+                              className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                experienced
+                              </p>
+                            )}
+                          </Menu.Item>
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                  </div>
+
+                  <div className='flex py-4'>
+                  
+                  {/* risk */}
+                  <p className='text-dark-green py-1'> My risk-reward balance is </p>
+
+                  <Menu as="div" className="relative inline-block text-left px-2">
+                    <div>
+                      <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        {risk}
+                        <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </Menu.Button>
+                    </div>
+
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-dark-green shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="py-1">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setRisk('safe')}
+                              className={classNames(
+                                active ? 'text-white' : 'text-light-gray',
+                                'block px-4 py-2 text-sm'
+                              )}
+                            >
+                              safe
+                            </p>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setRisk('balanced')}
+                              className={classNames(
+                                active ? 'text-white' : 'text-light-gray',
+                                'block px-4 py-2 text-sm'
+                              )}
+                            >
+                              balanced
+                            </p>
+                            )}
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setRisk('risky')}
+                              className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                risky
+                              </p>
+                            )}
+                          </Menu.Item>
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                  </div>
+
+                  <div className='flex py-4'>
+                  
+                  {/* capital*/}
+                  <p className='text-dark-green py-1'> My investment capital is </p>
+
+                  <Menu as="div" className="relative inline-block text-left px-2">
+                    <div>
+                      <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        {capital}
+                        <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </Menu.Button>
+                    </div>
+
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-dark-green shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="py-1">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setCapital('limited')}
+                              className={classNames(
+                                active ? 'text-white' : 'text-light-gray',
+                                'block px-4 py-2 text-sm'
+                              )}
+                            >
+                              limited
+                            </p>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setCapital('moderate')}
+                              className={classNames(
+                                active ? 'text-white' : 'text-light-gray',
+                                'block px-4 py-2 text-sm'
+                              )}
+                            >
+                              moderate
+                            </p>
+                            )}
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setCapital('substantial')}
+                              className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                substantial
+                              </p>
+                            )}
+                          </Menu.Item>
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                  </div>
+
+                  <div className='flex py-4'>
+                  
+                  {/* timeframe*/}
+                  <p className='text-dark-green py-1'>  I am looking for a return within </p>
+
+                  <Menu as="div" className="relative inline-block text-left px-2">
+                    <div>
+                      <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        {timeframe}
+                        <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </Menu.Button>
+                    </div>
+
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-dark-green shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="py-1">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setTimeframe('0-4 years')}
+                              className={classNames(
+                                active ? 'text-white' : 'text-light-gray',
+                                'block px-4 py-2 text-sm'
+                              )}
+                            >
+                              0-4 years
+                            </p>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setTimeframe('5-9 years')}
+                              className={classNames(
+                                active ? 'text-white' : 'text-light-gray',
+                                'block px-4 py-2 text-sm'
+                              )}
+                            >
+                              5-9 years
+                            </p>
+                            )}
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                              onClick={() => setTimeframe('10+ years')}
+                              className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                10+ years
+                              </p>
+                            )}
+                          </Menu.Item>
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                  </div>
+
+                  <div className='flex py-4'>
+                  
+                  {/* experience*/}
+                  <p className='text-dark-green py-1'> My investment experience is </p>
+
+                  <Menu as="div" className="relative inline-block text-left px-2">
+                    <div>
+                      <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        {experience}
+                        <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </Menu.Button>
+                    </div>
+
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-dark-green shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="py-1">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                New
+                              </a>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                Intermediate
+                              </a>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                                onClick={setUser('hi')}
+                                className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                Experienced
+                              </p>
+                            )}
+                          </Menu.Item>
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                  </div>
+
+                </>
+                <p className='mt-16'>Lets talk about sustainability <br /></p>
+                <p className='text-dark-green mt-6'>What sector of the circular economy would you prefer to invest in?</p>
+                <Menu as="div" className="relative inline-block text-left px-2">
+                    <div>
+                      <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        {user[0]}
+                        <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </Menu.Button>
+                    </div>
+
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-dark-green shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="py-1">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                Energy
+                              </a>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                Pollution
+                              </a>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                                onClick={setUser('hi')}
+                                className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                Recycling
+                              </p>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                                onClick={setUser('hi')}
+                                className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                Conservation
+                              </p>
+                            )}
+                          </Menu.Item>
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+
+              </label>
+
+
 
           {isBaselineLoading && (
             <div className="mt-4">

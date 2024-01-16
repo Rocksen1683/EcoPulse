@@ -14,7 +14,7 @@ module.exports = {
       'teal': "#75c9b7",
       'mint': "#c7ddcc",
       'navy': "#16123f",
-
+      'light-gray': "#D1D5DB"
     },
   },
   plugins: [],

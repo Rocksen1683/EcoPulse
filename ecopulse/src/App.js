@@ -154,7 +154,42 @@ export default function Example() {
             {isBaselineLoading ? 'Loading...' : 'Enter'}
           </button>
 
-          <div className="block text-md mt-10 py-10 leading-6 text-darker-green">
+
+          {isBaselineLoading && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-500">
+                Baseline model loading... please do not refresh the page.
+              </p>
+            </div>
+          )}
+          {!isBaselineLoading && baseServerFile && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-500">
+                Baseline model loaded! Download your file{' '}
+                <a
+                  href={` https://16ce-174-88-242-62.ngrok-free.app/api/download/${baseServerFile}`}
+                  className="text-indigo-600 hover:text-purple-800"
+                >
+                  here
+                </a>
+              </p>
+            </div>
+          )
+          }
+
+          {!isBaselineLoading && chartHTML && baseServerFile && (<>
+            <p className='my-3'>
+              Baseline results are sorted based on which idea we think are good
+              <br />
+              Here's a visualization of the categories of ideas in the dataset
+            </p>
+            <iframe className='w-full h-[410px]' title='big bar' srcDoc={chartHTML}></iframe>
+          </>)}
+
+          {!isBaselineLoading && chartHTML && baseServerFile ? (
+            <div>
+
+<div className="block text-md mt-10 py-10 leading-6 text-darker-green">
                 <>
 
                   <p>Tell us about yourself, explain what type of investments you are looking for<br /></p>
@@ -520,63 +555,7 @@ export default function Example() {
                   </Menu>
                 </div>
               </div>
-
-
-
-          {isBaselineLoading && (
-            <div className="mt-4">
-              <p className="text-sm text-gray-500">
-                Baseline model loading... please do not refresh the page.
-              </p>
-            </div>
-          )}
-          {!isBaselineLoading && baseServerFile && (
-            <div className="mt-4">
-              <p className="text-sm text-gray-500">
-                Baseline model loaded! Download your file{' '}
-                <a
-                  href={` https://16ce-174-88-242-62.ngrok-free.app/api/download/${baseServerFile}`}
-                  className="text-indigo-600 hover:text-purple-800"
-                >
-                  here
-                </a>
-              </p>
-            </div>
-          )
-          }
-
-          {!isBaselineLoading && chartHTML && baseServerFile && (<>
-            <p className='my-3'>
-              Baseline results are sorted based on which idea we think are good
-              <br />
-              Here's a visualization of the categories of ideas in the dataset
-            </p>
-            <iframe className='w-full h-[410px]' title='big bar' srcDoc={chartHTML}></iframe>
-          </>)}
-
-          {!isBaselineLoading && chartHTML && baseServerFile ? (
-            <div>
-              <label className="block text-md mt-20 leading-6 text-darker-green">
-                <>
-                  <p>Tell us about yourself, explain what type of investments you are looking for<br /></p>
-                  <p className='text-dark-green'> (e.g. Im a young investor looking to make big profit, I have a large amount of money to invest and am willing to try anything for a big profit margin and need a return within the next 10 years)</p>
-                </>
-              </label>
-              <div className=" mt-2">
-
-              </div>
-              <label className="block text-md mt-20 leading-6 text-darker-green">
-              <>
-                <p>Tell us more about the type of ideas you want to invest in?<br /></p>
-                <p className='text-dark-green'> (e.g. i.e. are you interested in a certain sector (Education), businesss model etc.)</p>
-              </>
-              </label>
-              <div className="mt-2">
-                <input
-                  onChange={(e) => setUserSector(e.target.value)}
-                  className="px-3 block w-full rounded-md border-0 bg-dark-green py-1.5 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
-                />
-              </div>
+             
               <label className="block text-md mt-20 leading-6 text-darker-green">
               <>
                 <p><br />Now that we have the user model, you can filter your results based on a particular category. Enter a category from the following list: </p>

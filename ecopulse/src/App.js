@@ -16,19 +16,22 @@ export default function Example() {
   const [chartHTML, setChartHTML] = useState(null);
   const [isBaselineLoading, setIsBaselineLoading] = useState(false);
   const [isUserModelLoading, setIsUserModelLoading] = useState(false);
-  const [user, setUser] = useState(['new', 'safe', 'limited', '1-3 years']);
   const [experience, setExperience] = useState('new');
   const [risk, setRisk] = useState('safe');
   const [capital, setCapital] = useState('limited');
   const [timeframe, setTimeframe] = useState('1-3 years')
 
-  const [userSector, setUserSector] = useState(null);
+  const [userSector, setUserSector] = useState('renewable energy');
   const [category, setCategories] = useState(null);
   const [filterCat, setFilterCat] = useState(null);
   const userPrompt = () => {
     return "I am a " + experience + " investor. In terms of risk versus reward I want to prioritize investments that are "
      + risk + ". I have " + capital + " capital to invest. I want to see a return on my investment within " + timeframe;
   };
+
+  const userEnvSector = () => {
+    return " Ideally I will focus on ideas that support the enivornment by improving " + userSector;
+  }
   
 
   const handleEnter = async () => {
@@ -66,7 +69,7 @@ export default function Example() {
       fid: fid,
       apiKey: apiKey,
       userInfo: userPrompt(),
-      userSector: userSector,
+      userSector: userEnvSector(),
       category: filterCat,
     }
     const formData = new FormData();
@@ -151,7 +154,7 @@ export default function Example() {
             {isBaselineLoading ? 'Loading...' : 'Enter'}
           </button>
 
-          <label className="block text-md mt-10 py-10 leading-6 text-darker-green">
+          <div className="block text-md mt-10 py-10 leading-6 text-darker-green">
                 <>
 
                   <p>Tell us about yourself, explain what type of investments you are looking for<br /></p>
@@ -433,84 +436,17 @@ export default function Example() {
                       </Menu.Items>
                     </Transition>
                   </Menu>
-                  </div>
-
-                  <div className='flex py-4'>
-                  
-                  {/* experience*/}
-                  <p className='text-dark-green py-1'> My investment experience is </p>
-
-                  <Menu as="div" className="relative inline-block text-left px-2">
-                    <div>
-                      <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                        {experience}
-                        <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
-                      </Menu.Button>
-                    </div>
-
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-dark-green shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div className="py-1">
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active ? 'text-white' : 'text-light-gray',
-                                  'block px-4 py-2 text-sm'
-                                )}
-                              >
-                                New
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active ? 'text-white' : 'text-light-gray',
-                                  'block px-4 py-2 text-sm'
-                                )}
-                              >
-                                Intermediate
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <p
-                                onClick={setUser('hi')}
-                                className={classNames(
-                                  active ? 'text-white' : 'text-light-gray',
-                                  'block px-4 py-2 text-sm'
-                                )}
-                              >
-                                Experienced
-                              </p>
-                            )}
-                          </Menu.Item>
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-                  </div>
-
+                  </div> 
                 </>
+
                 <p className='mt-16'>Lets talk about sustainability <br /></p>
-                <p className='text-dark-green mt-6'>What sector of the circular economy would you prefer to invest in?</p>
+                <div className='flex mt-5 py-4'>
+
+                <p className='text-dark-green mt-1'>What sector of the circular economy would you prefer to invest in?</p>
                 <Menu as="div" className="relative inline-block text-left px-2">
                     <div>
                       <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                        {user[0]}
+                        {userSector}
                         <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
                       </Menu.Button>
                     </div>
@@ -527,54 +463,54 @@ export default function Example() {
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-dark-green shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-1">
                           <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active ? 'text-white' : 'text-light-gray',
-                                  'block px-4 py-2 text-sm'
-                                )}
-                              >
-                                Energy
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
-                                href="#"
-                                className={classNames(
-                                  active ? 'text-white' : 'text-light-gray',
-                                  'block px-4 py-2 text-sm'
-                                )}
-                              >
-                                Pollution
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
+                          {({ active }) => (
                               <p
-                                onClick={setUser('hi')}
+                                onClick={() => setUserSector('renewable energy')}
                                 className={classNames(
                                   active ? 'text-white' : 'text-light-gray',
                                   'block px-4 py-2 text-sm'
                                 )}
                               >
-                                Recycling
+                                renewable energy
+                              </p>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                          {({ active }) => (
+                              <p
+                                onClick={() => setUserSector('reducing pollution')}
+                                className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                reducing pollution
                               </p>
                             )}
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
                               <p
-                                onClick={setUser('hi')}
+                                onClick={() => setUserSector('recycling')}
                                 className={classNames(
                                   active ? 'text-white' : 'text-light-gray',
                                   'block px-4 py-2 text-sm'
                                 )}
                               >
-                                Conservation
+                                recycling systems
+                              </p>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <p
+                                onClick={() => setUserSector('conservation')}
+                                className={classNames(
+                                  active ? 'text-white' : 'text-light-gray',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                              >
+                                environmental conservation
                               </p>
                             )}
                           </Menu.Item>
@@ -582,8 +518,8 @@ export default function Example() {
                       </Menu.Items>
                     </Transition>
                   </Menu>
-
-              </label>
+                </div>
+              </div>
 
 
 
@@ -627,10 +563,7 @@ export default function Example() {
                 </>
               </label>
               <div className=" mt-2">
-                <input
-                  onChange={(e) => setUser(e.target.value)}
-                  className="px-3 block w-full rounded-md border-0 bg-dark-green py-1.5 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
-                />
+
               </div>
               <label className="block text-md mt-20 leading-6 text-darker-green">
               <>

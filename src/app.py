@@ -1,4 +1,5 @@
-from flask import Flask, current_app, flash, request, redirect, send_file, send_from_directory, url_for, jsonify, make_response
+import json
+from flask import Flask, Response, current_app, flash, request, redirect, send_file, send_from_directory, url_for, jsonify, make_response
 from flask_cors import CORS, cross_origin
 from openai import AuthenticationError
 import uuid
@@ -21,9 +22,11 @@ def allowed_file(filename):
 @app.route('/api/predict', methods=['POST', 'OPTIONS'])
 def predict():
     if request.method == 'OPTIONS':
+        print("OPTIONS")
         response = make_response()
-        response.headers.add('Access-Control-Allow-Methods', 'POST')
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS, GET')
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     if 'file' not in request.files:
             flash('No file part')
@@ -47,7 +50,17 @@ def predict():
     categories = evaluator.populate_categories()
     barhtml = evaluator.bar_visualization()
 
-    return jsonify({'filename': outfname, 'barhtml': barhtml, 'fid': fid, 'categories': categories})
+
+    response = {
+        'filename': outfname,
+        'barhtml': barhtml,
+        'fid': fid,
+        'categories': categories
+    }
+    resp = jsonify(response)
+    
+    print(resp)
+    return resp
 
 @app.route('/api/user-predict', methods=['POST'])
 def user_predict():

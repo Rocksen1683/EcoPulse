@@ -41,20 +41,24 @@ export default function Example() {
     formData.append('apiKey', apiKey);
     setIsBaselineLoading(true);
     try{
-    const res = await fetch(' https://16ce-174-88-242-62.ngrok-free.app/api/predict', {
-      mode: 'cors',
+    const response = await fetch('https://852f-146-190-254-2.ngrok-free.app/api/predict', {
       method: 'POST',
       cache: 'no-cache',
       body: formData,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-    }).then((res) => res.json());
-    setIsBaselineLoading(false);
-    setBaseServerFile(res.filename)
-    setFID(res.fid)
-    setChartHTML(res.barhtml)
-    setCategories(res.categories)
+      // mode: 'no-cors',
+    });
+
+    const res = await response.json();
+console.log(res);
+
+    console.log(response)
+
+      setIsBaselineLoading(false);
+      setBaseServerFile(res.filename)
+      setFID(res.fid)
+      setChartHTML(res.barhtml)
+      setCategories(res.categories)
+  
   } catch (e) {
     console.log(e)
   }
@@ -76,7 +80,7 @@ export default function Example() {
     Object.keys(bodyobj).forEach(key => formData.append(key, bodyobj[key]));
     
     setIsUserModelLoading(true);
-    const res = await fetch(' https://16ce-174-88-242-62.ngrok-free.app/api/user-predict', {
+    const res = await fetch('https://852f-146-190-254-2.ngrok-free.app/api/user-predict', {
       method: 'POST',
       cache: 'no-cache',
       contentType: 'application/json',
@@ -167,7 +171,7 @@ export default function Example() {
               <p className="text-sm text-gray-500">
                 Baseline model loaded! Download your file{' '}
                 <a
-                  href={` https://16ce-174-88-242-62.ngrok-free.app/api/download/${baseServerFile}`}
+                  href={`https://852f-146-190-254-2.ngrok-free.app/api/download/${baseServerFile}`}
                   className="text-indigo-600 hover:text-purple-800"
                 >
                   here
@@ -585,7 +589,7 @@ export default function Example() {
               <p className="text-sm text-gray-500">
                 User model loaded! Download your file{' '}
                 <a
-                  href={` https://16ce-174-88-242-62.ngrok-free.app/api/download/${userServerFile}`}
+                  href={`https://852f-146-190-254-2.ngrok-free.app/api/download/${userServerFile}`}
                   className="text-indigo-600 hover:text-purple-800"
                 >
                   here
@@ -601,7 +605,7 @@ export default function Example() {
                 <p className="text-sm text-gray-500">
                   Filtered model data loaded! Download your file{' '}
                   <a
-                    href={` https://16ce-174-88-242-62.ngrok-free.app/api/download/${filteredServerFile}`}
+                    href={`https://852f-146-190-254-2.ngrok-free.app/api/download/${filteredServerFile}`}
                     className="text-indigo-600 hover:text-purple-800"
                   >
                     here

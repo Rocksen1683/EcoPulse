@@ -20,7 +20,7 @@ export default function Example() {
   const [risk, setRisk] = useState('safe');
   const [capital, setCapital] = useState('limited');
   const [timeframe, setTimeframe] = useState('1-3 years')
-
+  const fakeCategories = ['education', 'healthcare', 'fashion','education', 'healthcare', 'fashion','education', 'healthcare', 'fashion']
   const [userSector, setUserSector] = useState('renewable energy');
   const [category, setCategories] = useState(null);
   const [filterCat, setFilterCat] = useState(null);
@@ -33,6 +33,14 @@ export default function Example() {
     return " Ideally I will focus on ideas that support the enivornment by improving " + userSector;
   }
   
+  const makeButton = (data) => {
+    return (
+        <button className="mt-2 mx-4 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+            onClick={() => setFilterCat(data)}> 
+            {data}
+        </button>
+    );
+  }
 
   const handleEnter = async () => {
     const formData = new FormData();
@@ -151,8 +159,13 @@ export default function Example() {
             onClick={handleEnter}
             disabled={isBaselineLoading}
           >
+
             {isBaselineLoading ? 'Loading...' : 'Enter'}
           </button>
+
+          <div>
+            {fakeCategories.map((item) => makeButton(item))}          
+          </div>
 
 
           {isBaselineLoading && (

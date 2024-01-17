@@ -116,7 +116,7 @@ class IdeaEvaluator:
         return result
 
     def baseline_model(self):
-        out_filename = f"./src/outs/{self.file_uuid}_baseline_results.csv"
+        out_filename = f"./outs/{self.file_uuid}_baseline_results.csv"
 
         for row in self.rows:
             baseline_row = self.generate_results(row[0], row[1], row[2], ['Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation'])
@@ -148,7 +148,7 @@ class IdeaEvaluator:
         fields = ['Index', 'Problem', 'Solution']
         fields.extend(self.new_metrics)
         fields.extend(['Combined Score', 'Category'])
-        with open(f"./src/outs/filtered_{self.file_uuid}_{category}_results.csv","w" ,newline = '', encoding = 'latin-1') as file:
+        with open(f"./outs/filtered_{self.file_uuid}_{category}_results.csv","w" ,newline = '', encoding = 'latin-1') as file:
             writer = csv.writer(file, fields)
             writer.writerow(fields)
             writer.writerows(filter)
@@ -234,7 +234,7 @@ class IdeaEvaluator:
         return weightedScore
     
     def export_user_model(self):
-        out_filename = f"./src/outs/{self.file_uuid}_user_results.csv"
+        out_filename = f"./outs/{self.file_uuid}_user_results.csv"
 
         fields = ['Index', 'Problem', 'Solution']
         fields.extend(self.new_metrics)

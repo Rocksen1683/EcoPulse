@@ -20,7 +20,6 @@ export default function Example() {
   const [risk, setRisk] = useState('safe');
   const [capital, setCapital] = useState('limited');
   const [timeframe, setTimeframe] = useState('1-3 years')
-  const fakeCategories = ['education', 'healthcare', 'fashion','education', 'healthcare', 'fashion','education', 'healthcare', 'fashion']
   const [userSector, setUserSector] = useState('renewable energy');
   const [category, setCategories] = useState(null);
   const [filterCat, setFilterCat] = useState(null);
@@ -162,10 +161,6 @@ export default function Example() {
 
             {isBaselineLoading ? 'Loading...' : 'Enter'}
           </button>
-
-          <div>
-            {fakeCategories.map((item) => makeButton(item))}          
-          </div>
 
 
           {isBaselineLoading && (
@@ -572,17 +567,13 @@ export default function Example() {
               <label className="block text-md mt-20 leading-6 text-darker-green">
               <>
                 <p><br />Now that we have the user model, you can filter your results based on a particular category. Enter a category from the following list: </p>
-                <p className='text-dark-green'>
-                  {Object.keys(category).join(', ')}
-                </p>
               </>
               </label>
-              <div className="mt-2">
-                <input
-                  onChange={(e) => setFilterCat(e.target.value)}
-                  className="px-3 block w-full rounded-md border-0 bg-dark-green py-1.5 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
-                />
+
+              <div>
+                {Object.keys(category).map((item) => makeButton(item))}          
               </div>
+              
               <button
                 className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
                 onClick={handleUser}

@@ -31,7 +31,7 @@ class IdeaEvaluator:
         #baseline model data 
         self.baseline_model_data = []
         self.categories = {}
-        self.fieldnames=['Index', 'Problem', 'Solution', 'Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation', 'Combined Score', 'Category']
+        self.fieldnames=['Index', 'Problem', 'Solution', 'Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation', 'Combined Score', 'Category', 'Industry', 'Description']
         self.new_metrics = ['Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation']
         self.user_weights = []
         self.user_model_data = []
@@ -80,6 +80,7 @@ class IdeaEvaluator:
             total_score += random_score
             example = example + metric + ": " + str(random_score) + " "
         example = example + "Combined Score: " + str(total_score) + " Category: Construction" + " Industry: Circular Economy"
+        example = example + " Description: This is a good idea because it is focused on the circular economy and has market potential upon scaling."
         messages = [
             {
                 "role": "system",
@@ -90,6 +91,7 @@ class IdeaEvaluator:
                 Step 2 : You must create a combined score, by aggregating (sum of) all the individual scores from the metrics above. This score should be between 0 and 100.
                 Step 3 : You are going to categorize the given problem into a category relevant to strengthening the circular economy. Only mention the category name, and not the description.
                 Step 4 : You are also tasked to identify the industry of the company. The options for industry are: Circular Economy, Sustainability, Adversarial, Random. Select Circular Economy if the idea is directly related to the circular economy, Sustainability if it is relevant to circular economy but not completely so, Adversarial if it is against the circular economy (oil, gas, greenwashing, etc.), and Random if it's in any other industry. Output should just be one of the four categories
+                Step 5 : Your final task is to provide a short qualitative description about why you evaluated the idea the way you did. This should be a short sentence or two, and should be relevant to the problem statement and solution. If you gave it a high score, explain why you think it is a good idea. If you gave it a low score, explain why you think it is a bad idea. If you gave it a medium score, explain why you think it is a mediocre idea. This should be one to two sentences long.
                 Ensure each criteria is given equal weightage, and is scored out of ''' + str(score) + '''. Ensure that the output has scores for all of the ''' + str(len(metrics)) + ''' metrics. Ensure that the output is in one line always, do not add newline characters. Ensure that the output is exactly the same format 
                 as the example, with the same number of spaces and punctuation. You do not have to show your reasoning for the scores.''',
             },
@@ -118,7 +120,7 @@ class IdeaEvaluator:
 
         result = [idx, problem, solution]
         
-        for x in range(1, len(metrics) + 3): # offset by 2 because it starts at 1 and need extra token for combined score
+        for x in range(1, len(metrics) + 4): # offset by 2 because it starts at 1 and need extra token for combined score
                 result.append(tokens[x].split()[0])
             
         result.append(tokens[-1])
@@ -130,7 +132,7 @@ class IdeaEvaluator:
         for row in self.rows:
             baseline_row = self.generate_results(row[0], row[1], row[2], ['Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation'])
             self.baseline_model_data.append(baseline_row)
-        self.baseline_model_data.sort(key=lambda x: x[-3], reverse=True)
+        self.baseline_model_data.sort(key=lambda x: x[-4], reverse=True)
 
 
         with open(out_filename,'w', newline = '', encoding = 'latin-1') as file:
@@ -142,7 +144,7 @@ class IdeaEvaluator:
 
     def populate_categories(self):
         for row in self.baseline_model_data:
-            category = row[-2]
+            category = row[-3]
             if category in self.categories:
                 self.categories[category] += 1 
             else:
@@ -152,11 +154,11 @@ class IdeaEvaluator:
     def filter_categories(self, model, category):
         filter = []
         for row in model:
-            if category.casefold() == row[-2].casefold():
+            if category.casefold() == row[-3].casefold():
                 filter.append(row)
         fields = ['Index', 'Problem', 'Solution']
         fields.extend(self.new_metrics)
-        fields.extend(['Combined Score', 'Category', 'Industry'])
+        fields.extend(['Combined Score', 'Category', 'Industry', 'Description'])
         with open(f"./outs/filtered_{self.file_uuid}_{category}_results.csv","w" ,newline = '', encoding = 'latin-1') as file:
             writer = csv.writer(file, fields)
             writer.writerow(fields)
@@ -173,7 +175,7 @@ class IdeaEvaluator:
     
     def remove_adversarial(self):
         for row in self.user_model_data:
-            if row[-1] == 'Adversarial':
+            if (row[-2] == 'Adversarial') or (row[-3] == 'Adversarial'):
                 self.user_model_data.remove(row)
     def user_model(self, intro, goals):
   
@@ -222,7 +224,7 @@ class IdeaEvaluator:
     def evaluateAdditionalMetrics(self):
         fieldnames=['Index', 'Problem', 'Solution']
         fieldnames.extend(self.new_metrics)
-        fieldnames.append('Combined Score')
+        fieldnames.extend(['Category', 'Industry', 'Description'])
         
         for row in self.rows:
             baseline_row = self.generate_results(row[0], row[1], row[2], self.new_metrics)
@@ -245,7 +247,7 @@ class IdeaEvaluator:
 
             weightedScore[x].append(total)
             self.user_model_data[x][3:14] = weightedScore[x]
-        self.user_model_data.sort(key=lambda x: x[-3], reverse=True)
+        self.user_model_data.sort(key=lambda x: x[-4], reverse=True)
         return weightedScore
     
     def export_user_model(self):
@@ -254,7 +256,7 @@ class IdeaEvaluator:
 
         fields = ['Index', 'Problem', 'Solution']
         fields.extend(self.new_metrics)
-        fields.extend(['Combined Score', 'Category', 'Industry'])
+        fields.extend(['Combined Score', 'Category', 'Industry', 'Description'])
 
         with open(out_filename,'w', newline = '', encoding = 'latin-1') as file:
             writer = csv.writer(file, fields)

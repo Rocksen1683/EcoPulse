@@ -582,7 +582,7 @@ console.log(res);
              
               <label className="block text-md mt-20 leading-6 text-darker-green">
               <>
-                <p><br />Now that we have the user model, you can filter your results based on a particular category. Enter a category from the following list: </p>
+                <p><br />You can filter your results based on a particular category. Enter a category from the following list: </p>
               </>
               </label>
 

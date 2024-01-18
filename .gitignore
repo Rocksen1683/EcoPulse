@@ -2,3 +2,4 @@
 data/*
 src/outs/*
 src/__pycache__*
+src/data/*

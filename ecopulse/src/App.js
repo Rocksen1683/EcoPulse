@@ -570,8 +570,8 @@ console.log(res);
                 </div>
               </div>
 
-              <label className="block text-md mt-20 leading-6 text-darker-green">
-              <p>Is there anything else you'd like us to know ?<br /></p>
+              <label className="block text-md mt-16 leading-6 text-darker-green">
+              <p>Is there anything else you'd like us to know?<br /></p>
               </label>
               <div className=" mt-2">
                 <input

@@ -21,11 +21,13 @@ export default function Example() {
   const [capital, setCapital] = useState('limited');
   const [timeframe, setTimeframe] = useState('1-3 years')
   const [userSector, setUserSector] = useState('renewable energy');
+  const [user, setUser] = useState('');
   const [category, setCategories] = useState(null);
   const [filterCat, setFilterCat] = useState(null);
   const userPrompt = () => {
     return "I am a " + experience + " investor. In terms of risk versus reward I want to prioritize investments that are "
-     + risk + ". I have " + capital + " capital to invest. I want to see a return on my investment within " + timeframe;
+     + risk + ". I have " + capital + " capital to invest. I want to see a return on my investment within " + timeframe
+     + ". " + user;
   };
 
   const userEnvSector = () => {
@@ -566,6 +568,16 @@ console.log(res);
                     </Transition>
                   </Menu>
                 </div>
+              </div>
+
+              <label className="block text-md mt-20 leading-6 text-darker-green">
+              <p>Is there anything else you'd like us to know ?<br /></p>
+              </label>
+              <div className=" mt-2">
+                <input
+                  onChange={(e) => setUser(e.target.value)}
+                  className="px-3 block w-full rounded-md border-0 bg-dark-green py-1.5 text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal sm:text-sm sm:leading-6"
+                />
               </div>
              
               <label className="block text-md mt-20 leading-6 text-darker-green">

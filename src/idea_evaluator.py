@@ -14,6 +14,7 @@ import plotly.graph_objects as go
 import plotly.io as io 
 import time
 
+
 class IdeaEvaluator:
     def __init__(self, file_uuid, api_key):
         dotenv.load_dotenv()
@@ -34,7 +35,14 @@ class IdeaEvaluator:
         self.new_metrics = ['Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation']
         self.user_weights = []
         self.user_model_data = []
-        
+        self.model_id = "ft:gpt-3.5-turbo-1106:personal::8i9Zq9aI"
+        self.model_check = False
+        for model in self.client.models.list():
+            if self.model_id == model.id:
+                self.model_check = True
+        if not self.model_check:
+            self.model_id = 'gpt-3.5-turbo'
+        print("Model ID: ", self.model_id)
 
     def populate_rows(self, rows):
         with open(self.dataset_path, encoding = 'latin-1') as file:
@@ -71,7 +79,7 @@ class IdeaEvaluator:
             random_score = random.randint(1, score)
             total_score += random_score
             example = example + metric + ": " + str(random_score) + " "
-        example = example + "Combined Score: " + str(total_score) + " Category: Construction" 
+        example = example + "Combined Score: " + str(total_score) + " Category: Construction" + " Industry: Circular Economy"
         messages = [
             {
                 "role": "system",
@@ -81,6 +89,7 @@ class IdeaEvaluator:
                 Step 1 : For each metric, you provide a score for the solution between 0 and ''' + str(score) + '''. The higher the score, the better the solution.
                 Step 2 : You must create a combined score, by aggregating (sum of) all the individual scores from the metrics above. This score should be between 0 and 100.
                 Step 3 : You are going to categorize the given problem into a category relevant to strengthening the circular economy. Only mention the category name, and not the description.
+                Step 4 : You are also tasked to identify the industry of the company. The options for industry are: Circular Economy, Sustainability, Adversarial, Random. Select Circular Economy if the idea is directly related to the circular economy, Sustainability if it is relevant to circular economy but not completely so, Adversarial if it is against the circular economy (oil, gas, greenwashing, etc.), and Random if it's in any other industry. Output should just be one of the four categories
                 Ensure each criteria is given equal weightage, and is scored out of ''' + str(score) + '''. Ensure that the output has scores for all of the ''' + str(len(metrics)) + ''' metrics. Ensure that the output is in one line always, do not add newline characters. Ensure that the output is exactly the same format 
                 as the example, with the same number of spaces and punctuation. You do not have to show your reasoning for the scores.''',
             },
@@ -100,16 +109,16 @@ class IdeaEvaluator:
         ]
         
         res = self.client.chat.completions.create(
-            model = "gpt-3.5-turbo",
+            model =  self.model_id,
             messages = messages
         )
         msg = res.choices[0].message.content
-        
+        print(msg)
         tokens = msg.split(': ')
 
         result = [idx, problem, solution]
         
-        for x in range(1, len(metrics) + 2): # offset by 2 because it starts at 1 and need extra token for combined score
+        for x in range(1, len(metrics) + 3): # offset by 2 because it starts at 1 and need extra token for combined score
                 result.append(tokens[x].split()[0])
             
         result.append(tokens[-1])
@@ -121,7 +130,7 @@ class IdeaEvaluator:
         for row in self.rows:
             baseline_row = self.generate_results(row[0], row[1], row[2], ['Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation'])
             self.baseline_model_data.append(baseline_row)
-        self.baseline_model_data.sort(key=lambda x: x[-2], reverse=True)
+        self.baseline_model_data.sort(key=lambda x: x[-3], reverse=True)
 
 
         with open(out_filename,'w', newline = '', encoding = 'latin-1') as file:
@@ -133,7 +142,7 @@ class IdeaEvaluator:
 
     def populate_categories(self):
         for row in self.baseline_model_data:
-            category = row[-1]
+            category = row[-2]
             if category in self.categories:
                 self.categories[category] += 1 
             else:
@@ -143,11 +152,11 @@ class IdeaEvaluator:
     def filter_categories(self, model, category):
         filter = []
         for row in model:
-            if category.casefold() == row[-1].casefold():
+            if category.casefold() == row[-2].casefold():
                 filter.append(row)
         fields = ['Index', 'Problem', 'Solution']
         fields.extend(self.new_metrics)
-        fields.extend(['Combined Score', 'Category'])
+        fields.extend(['Combined Score', 'Category', 'Industry'])
         with open(f"./outs/filtered_{self.file_uuid}_{category}_results.csv","w" ,newline = '', encoding = 'latin-1') as file:
             writer = csv.writer(file, fields)
             writer.writerow(fields)
@@ -161,6 +170,11 @@ class IdeaEvaluator:
         fig = go.Figure(data=[go.Bar(x=keys, y=values)])
         fig.update_layout(title_text='Category Distribution', xaxis_title='Categories', yaxis_title='Frequency')
         return io.to_html(fig)
+    
+    def remove_adversarial(self):
+        for row in self.user_model_data:
+            if row[-1] == 'Adversarial':
+                self.user_model_data.remove(row)
     def user_model(self, intro, goals):
   
         print("Tell us about yourself, explain what type of investments you are looking for")
@@ -173,7 +187,8 @@ class IdeaEvaluator:
                 { "role": "assistant", "content": "23, 90, 63, 74, 9" },
                 { "role": "user", "content": intro}
             ],
-            model="gpt-3.5-turbo",
+            
+            model= self.model_id,
         )
         weights = chat_completion.choices[0].message.content
         #weights = '70, 85, 50, 67, 94' 
@@ -190,7 +205,7 @@ class IdeaEvaluator:
                 { "role": "assistant", "content": "Regulatory Compliance,90,Sustainibility Impact,50,Company Partnerships,73,Customer Retention,61,Government Incentives,43" },
                 { "role": "user", "content": intro + " " + goals}
             ],
-            model="gpt-3.5-turbo",
+            model= self.model_id,
         )
         tokens = chat_completion.choices[0].message.content.split(",")
 
@@ -212,7 +227,7 @@ class IdeaEvaluator:
         for row in self.rows:
             baseline_row = self.generate_results(row[0], row[1], row[2], self.new_metrics)
             self.user_model_data.append(baseline_row)
-        self.user_model_data.sort(key=lambda x: x[::-1], reverse=True)
+        # self.user_model_data.sort(key=lambda x: x[::-1], reverse=True)
 
         print("The New Metrics are: ", self.new_metrics[5:])
 
@@ -230,15 +245,16 @@ class IdeaEvaluator:
 
             weightedScore[x].append(total)
             self.user_model_data[x][3:14] = weightedScore[x]
-        self.user_model_data.sort(key=lambda x: x[-2], reverse=True)
+        self.user_model_data.sort(key=lambda x: x[-3], reverse=True)
         return weightedScore
     
     def export_user_model(self):
+        self.remove_adversarial()
         out_filename = f"./outs/{self.file_uuid}_user_results.csv"
 
         fields = ['Index', 'Problem', 'Solution']
         fields.extend(self.new_metrics)
-        fields.extend(['Combined Score', 'Category'])
+        fields.extend(['Combined Score', 'Category', 'Industry'])
 
         with open(out_filename,'w', newline = '', encoding = 'latin-1') as file:
             writer = csv.writer(file, fields)

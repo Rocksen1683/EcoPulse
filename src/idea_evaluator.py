@@ -92,8 +92,8 @@ class IdeaEvaluator:
                 Step 3 : You are going to categorize the given problem into a category relevant to strengthening the circular economy. Only mention the category name, and not the description.
                 Step 4 : You are also tasked to identify the industry of the company. The options for industry are: Circular Economy, Sustainability, Adversarial, Random. Select Circular Economy if the idea is directly related to the circular economy, Sustainability if it is relevant to circular economy but not completely so, Adversarial if it is against the circular economy (oil, gas, greenwashing, etc.), and Random if it's in any other industry. Output should just be one of the four categories
                 Step 5 : Your final task is to provide a short qualitative description about why you evaluated the idea the way you did. This should be a short sentence or two, and should be relevant to the problem statement and solution. If you gave it a high score, explain why you think it is a good idea. If you gave it a low score, explain why you think it is a bad idea. If you gave it a medium score, explain why you think it is a mediocre idea. This should be one to two sentences long.
-                Ensure each criteria is given equal weightage, and is scored out of ''' + str(score) + '''. Ensure that the output has scores for all of the ''' + str(len(metrics)) + ''' metrics. Ensure that the output is in one line always, do not add newline characters. Ensure that the output is exactly the same format 
-                as the example, with the same number of spaces and punctuation. You do not have to show your reasoning for the scores.''',
+                Ensure each criteria is given equal weightage, and is scored out of ''' + str(score) + '''. Ensure that the output has scores for all of the ''' + str(len(metrics)) + ''' metrics. Ensure that you have to show your one line description for the scores being generated. Ensure that the output is in one line always, do not add newline characters. Ensure that the output is exactly the same format 
+                as the example, with the same number of spaces and punctuation.''',
             },
             {
                 "role": "user",
@@ -121,7 +121,7 @@ class IdeaEvaluator:
         result = [idx, problem, solution]
         
         for x in range(1, len(metrics) + 4): # offset by 2 because it starts at 1 and need extra token for combined score
-                result.append(tokens[x].split()[0])
+            result.append(tokens[x].split()[0])
             
         result.append(tokens[-1])
         return result

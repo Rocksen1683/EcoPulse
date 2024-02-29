@@ -48,7 +48,7 @@ export default function Example() {
     formData.append('apiKey', apiKey);
     setIsBaselineLoading(true);
     try{
-    const response = await fetch('https://f2a9-174-88-242-62.ngrok-free.app//api/predict', {
+    const response = await fetch('https://535f-76-68-10-138.ngrok-free.app/api/predict', {
       method: 'POST',
       cache: 'no-cache',
       body: formData,
@@ -87,7 +87,7 @@ console.log(res);
     Object.keys(bodyobj).forEach(key => formData.append(key, bodyobj[key]));
     
     setIsUserModelLoading(true);
-    const res = await fetch('https://f2a9-174-88-242-62.ngrok-free.app//api/user-predict', {
+    const res = await fetch('https://535f-76-68-10-138.ngrok-free.app/api/user-predict', {
       method: 'POST',
       cache: 'no-cache',
       contentType: 'application/json',
@@ -179,7 +179,7 @@ console.log(res);
               <p className="text-sm text-gray-500">
                 Baseline model loaded! Download your file{' '}
                 <a
-                  href={`https://f2a9-174-88-242-62.ngrok-free.app//api/download/${baseServerFile}`}
+                  href={`https://535f-76-68-10-138.ngrok-free.app/api/download/${baseServerFile}`}
                   className="text-indigo-600 hover:text-purple-800"
                 >
                   here
@@ -191,7 +191,7 @@ console.log(res);
 
           {!isBaselineLoading && chartHTML && baseServerFile && (<>
             <p className='my-3'>
-              Baseline results are sorted based on which idea we think are good
+              Baseline results are sorted based on which idea we think fit the metrics
               <br />
               Here's a visualization of the categories of ideas in the dataset
             </p>
@@ -593,7 +593,7 @@ console.log(res);
               <p className="text-sm text-gray-500">
                 User model loaded! Download your file{' '}
                 <a
-                  href={`https://f2a9-174-88-242-62.ngrok-free.app//api/download/${userServerFile}`}
+                  href={`https://535f-76-68-10-138.ngrok-free.app/api/download/${userServerFile}`}
                   className="text-indigo-600 hover:text-purple-800"
                 >
                   here
@@ -609,7 +609,7 @@ console.log(res);
                 <p className="text-sm text-gray-500">
                   Filtered model data loaded! Download your file{' '}
                   <a
-                    href={`https://f2a9-174-88-242-62.ngrok-free.app//api/download/${filteredServerFile}`}
+                    href={`https://535f-76-68-10-138.ngrok-free.app/api/download/${filteredServerFile}`}
                     className="text-indigo-600 hover:text-purple-800"
                   >
                     here

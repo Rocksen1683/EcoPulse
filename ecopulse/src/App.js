@@ -50,7 +50,7 @@ export default function Example() {
     formData.append('apiKey', apiKey);
     setIsBaselineLoading(true);
     try{
-    const response = await fetch('https://ecopulse-k6tr.onrender.com//api//predict', {
+    const response = await fetch('https://ecopulse-k6tr.onrender.com/api/predict', {
       method: 'POST',
       cache: 'no-cache',
       body: formData,

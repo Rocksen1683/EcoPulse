@@ -41,7 +41,7 @@ class IdeaEvaluator:
         #     if self.model_id == model.id:
         #         self.model_check = True
         # if not self.model_check:
-        self.model_id = 'gpt-4o-realtime-preview'
+        self.model_id = 'gpt-4o-mini'
         print("Model ID: ", self.model_id)
 
     def populate_rows(self, rows):

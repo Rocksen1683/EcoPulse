@@ -127,16 +127,21 @@ class IdeaEvaluator:
         return result
 
     def baseline_model(self):
-        out_filename = f"./outs/{self.file_uuid}_baseline_results.csv"
-
+        out_dir = "./outs"
+        os.makedirs(out_dir, exist_ok=True)  # Create the directory if it doesn't exist
+        out_filename = os.path.join(out_dir, f"{self.file_uuid}_baseline_results.csv")
+        
         for row in self.rows:
-            baseline_row = self.generate_results(row[0], row[1], row[2], ['Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation'])
+            baseline_row = self.generate_results(
+                row[0], row[1], row[2],
+                ['Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation']
+            )
             self.baseline_model_data.append(baseline_row)
+        
         self.baseline_model_data.sort(key=lambda x: x[-4], reverse=True)
 
-
-        with open(out_filename,'w', newline = '', encoding = 'latin-1') as file:
-            writer = csv.writer(file, self.fieldnames)
+        with open(out_filename, 'w', newline='', encoding='latin-1') as file:
+            writer = csv.writer(file)
             writer.writerow(self.fieldnames)
             writer.writerows(self.baseline_model_data)
         

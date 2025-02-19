@@ -16,11 +16,11 @@ export default function Example() {
   const [chartHTML, setChartHTML] = useState(null);
   const [isBaselineLoading, setIsBaselineLoading] = useState(false);
   const [isUserModelLoading, setIsUserModelLoading] = useState(false);
-  const [experience, setExperience] = useState('new');
-  const [risk, setRisk] = useState('safe');
-  const [capital, setCapital] = useState('limited');
-  const [timeframe, setTimeframe] = useState('1-3 years')
-  const [userSector, setUserSector] = useState('renewable energy');
+  const [experience, setExperience] = useState('New');
+  const [risk, setRisk] = useState('Safe');
+  const [capital, setCapital] = useState('Limited');
+  const [timeframe, setTimeframe] = useState('1-3 Years')
+  const [userSector, setUserSector] = useState('Renewable Energy');
   const [user, setUser] = useState('');
   const [category, setCategories] = useState(null);
   const [filterCat, setFilterCat] = useState(null);
@@ -184,7 +184,9 @@ console.log(res);
                   href={`https://ecopulse-k6tr.onrender.com//api//download/${baseServerFile}`}
                   className="text-indigo-600 hover:text-purple-800"
                 >
-                  here
+                  <u>
+                  here.
+                  </u>
                 </a>
               </p>
             </div>
@@ -304,26 +306,26 @@ console.log(res);
                           <Menu.Item>
                             {({ active }) => (
                               <p
-                              onClick={() => setRisk('safe')}
+                              onClick={() => setRisk('Safe')}
                               className={classNames(
                                 active ? 'text-white' : 'text-light-gray',
                                 'block px-4 py-2 text-sm'
                               )}
                             >
-                              safe
+                              Safe
                             </p>
                             )}
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
                               <p
-                              onClick={() => setRisk('balanced')}
+                              onClick={() => setRisk('Balanced')}
                               className={classNames(
                                 active ? 'text-white' : 'text-light-gray',
                                 'block px-4 py-2 text-sm'
                               )}
                             >
-                              balanced
+                              Balanced
                             </p>
                             )}
                           </Menu.Item>
@@ -331,13 +333,13 @@ console.log(res);
                           <Menu.Item>
                             {({ active }) => (
                               <p
-                              onClick={() => setRisk('risky')}
+                              onClick={() => setRisk('Risky')}
                               className={classNames(
                                   active ? 'text-white' : 'text-light-gray',
                                   'block px-4 py-2 text-sm'
                                 )}
                               >
-                                risky
+                                Risky
                               </p>
                             )}
                           </Menu.Item>
@@ -374,26 +376,26 @@ console.log(res);
                           <Menu.Item>
                             {({ active }) => (
                               <p
-                              onClick={() => setCapital('limited')}
+                              onClick={() => setCapital('Limited')}
                               className={classNames(
                                 active ? 'text-white' : 'text-light-gray',
                                 'block px-4 py-2 text-sm'
                               )}
                             >
-                              limited
+                              Limited
                             </p>
                             )}
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
                               <p
-                              onClick={() => setCapital('moderate')}
+                              onClick={() => setCapital('Moderate')}
                               className={classNames(
                                 active ? 'text-white' : 'text-light-gray',
                                 'block px-4 py-2 text-sm'
                               )}
                             >
-                              moderate
+                              Moderate
                             </p>
                             )}
                           </Menu.Item>
@@ -401,13 +403,13 @@ console.log(res);
                           <Menu.Item>
                             {({ active }) => (
                               <p
-                              onClick={() => setCapital('substantial')}
+                              onClick={() => setCapital('Substantial')}
                               className={classNames(
                                   active ? 'text-white' : 'text-light-gray',
                                   'block px-4 py-2 text-sm'
                                 )}
                               >
-                                substantial
+                                Substantial
                               </p>
                             )}
                           </Menu.Item>
@@ -450,7 +452,7 @@ console.log(res);
                                 'block px-4 py-2 text-sm'
                               )}
                             >
-                              0-4 years
+                              0-4 Years
                             </p>
                             )}
                           </Menu.Item>
@@ -463,7 +465,7 @@ console.log(res);
                                 'block px-4 py-2 text-sm'
                               )}
                             >
-                              5-9 years
+                              5-9 Years
                             </p>
                             )}
                           </Menu.Item>
@@ -477,7 +479,7 @@ console.log(res);
                                   'block px-4 py-2 text-sm'
                                 )}
                               >
-                                10+ years
+                                10+ Years
                               </p>
                             )}
                           </Menu.Item>
@@ -514,52 +516,52 @@ console.log(res);
                           <Menu.Item>
                           {({ active }) => (
                               <p
-                                onClick={() => setUserSector('renewable energy')}
+                                onClick={() => setUserSector('Renewable Energy')}
                                 className={classNames(
                                   active ? 'text-white' : 'text-light-gray',
                                   'block px-4 py-2 text-sm'
                                 )}
                               >
-                                renewable energy
+                                Renewable Energy
                               </p>
                             )}
                           </Menu.Item>
                           <Menu.Item>
                           {({ active }) => (
                               <p
-                                onClick={() => setUserSector('reducing pollution')}
+                                onClick={() => setUserSector('Reducing Pollution')}
                                 className={classNames(
                                   active ? 'text-white' : 'text-light-gray',
                                   'block px-4 py-2 text-sm'
                                 )}
                               >
-                                reducing pollution
+                                Reducing Pollution
                               </p>
                             )}
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
                               <p
-                                onClick={() => setUserSector('recycling')}
+                                onClick={() => setUserSector('Recycling')}
                                 className={classNames(
                                   active ? 'text-white' : 'text-light-gray',
                                   'block px-4 py-2 text-sm'
                                 )}
                               >
-                                recycling systems
+                                Recycling Systems
                               </p>
                             )}
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
                               <p
-                                onClick={() => setUserSector('conservation')}
+                                onClick={() => setUserSector('Conservation')}
                                 className={classNames(
                                   active ? 'text-white' : 'text-light-gray',
                                   'block px-4 py-2 text-sm'
                                 )}
                               >
-                                environmental conservation
+                                Environmental Conservation
                               </p>
                             )}
                           </Menu.Item>
@@ -608,7 +610,9 @@ console.log(res);
                   href={`https://ecopulse-k6tr.onrender.com//api//download/${userServerFile}`}
                   className="text-indigo-600 hover:text-purple-800"
                 >
-                  here
+                  <u>
+                  here.
+                  </u>
                 </a>
               </p>
             </div>
@@ -624,7 +628,9 @@ console.log(res);
                     href={`https://ecopulse-k6tr.onrender.com//api//download/${filteredServerFile}`}
                     className="text-indigo-600 hover:text-purple-800"
                   >
-                    here
+                  <u>
+                  here.
+                  </u>
                   </a>
                 </p>
               </div>

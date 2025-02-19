@@ -35,13 +35,13 @@ class IdeaEvaluator:
         self.new_metrics = ['Market Potential', 'Scalability', 'Feasibility','Maturity Stage','Technological Innovation']
         self.user_weights = []
         self.user_model_data = []
-        self.model_id = "ft:gpt-3.5-turbo-1106:personal::8i9Zq9aI"
-        self.model_check = False
-        for model in self.client.models.list():
-            if self.model_id == model.id:
-                self.model_check = True
-        if not self.model_check:
-            self.model_id = 'gpt-3.5-turbo'
+        # self.model_id = "ft:gpt-3.5-turbo-1106:personal::8i9Zq9aI"
+        # self.model_check = False
+        # for model in self.client.models.list():
+        #     if self.model_id == model.id:
+        #         self.model_check = True
+        # if not self.model_check:
+        self.model_id = 'gpt-4o-realtime-preview'
         print("Model ID: ", self.model_id)
 
     def populate_rows(self, rows):

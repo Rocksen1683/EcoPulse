@@ -172,7 +172,7 @@ console.log(res);
           {isBaselineLoading && (
             <div className="mt-4">
               <p className="text-sm text-gray-500">
-                Baseline model loading... please do not refresh the page.
+                Baseline model loading... do not refresh the page.
               </p>
             </div>
           )}
